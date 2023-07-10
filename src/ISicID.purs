@@ -1,30 +1,64 @@
 module ISicID
   ( answer
   , decDigits
+  , digitsUcase
   , getItem
+  , Base (..)
   )
   where
 
 import Prelude
-import Data.Array (intercalate)
-import Data.Array ((!!), (..))
+import Data.Array ((!!), (..), intercalate, singleton, head)
 import Data.Maybe (maybe, Maybe(..), isNothing)
+import Data.String (toUpper)
+import Data.String.CodeUnits (fromCharArray, toCharArray)
 
-digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] <> ['A', 'B', 'C', 'D', 'E', 'F']
+
+digits0to9 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+digitsLcase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+digitsUcase = upper <$> digitsLcase
+
+hexDigits = digits0to9 <> ['A', 'B', 'C', 'D', 'E', 'F']
+base52Digits = digitsLcase <> digitsUcase
+
+
+data Base = 
+      Hex
+    | Base52
+    | Dec
+
+upper :: Char -> Char
+upper c = case head $ toCharArray $ toUpper $ fromCharArray [c] of
+    Just x -> x
+    Nothing -> '-'
 
 getItem :: Int -> Array Char -> Maybe Char
 getItem i xs = xs !! i 
 
-lookup :: Int -> Char
-lookup i = case getItem i digits of
-    Nothing -> 'X'
+getBaseDigits :: Base -> Array Char
+getBaseDigits Hex = hexDigits
+getBaseDigits Base52 = base52Digits
+getBaseDigits _ = digits0to9
+
+getBaseAsInt :: Base -> Int
+getBaseAsInt Hex = 16
+getBaseAsInt Base52 = 52
+getBaseAsInt _ = 10
+
+lookupBaseDigit :: Base -> Int -> Char
+lookupBaseDigit b i = case getItem i (getBaseDigits b) of
+    Nothing -> '-'
     Just x -> x 
 
-decDigits :: Int -> Int -> Array Int
-decDigits dec base = 
-    let q = dec `div` base
-        r = dec `mod` base
-    in (if q < base then [q] else decDigits q base) <> [r]
+decDigits :: Base -> Int -> Array Int
+decDigits base dec = 
+    let b = getBaseAsInt base
+        q = dec `div` b
+        r = dec `mod` b
+    in (if q < b then [q] else decDigits base q) <> [r]
 
-answer = intercalate " " $ show <$> lookup <$> decDigits 10 16
+decToBase :: Base -> Int -> String
+decToBase base dec = fromCharArray $ (lookupBaseDigit base <$> decDigits base 10)
 
+answer = decToBase Dec 10
