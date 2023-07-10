@@ -8,7 +8,8 @@ module ISicID
   where
 
 import Prelude
-import Data.Array ((!!), (..), intercalate, singleton, head)
+import Data.Array ((!!), (..), (:), intercalate, singleton, head, findIndex, length, uncons, foldr, foldl)
+import Data.Int (pow)
 import Data.Maybe (maybe, Maybe(..), isNothing)
 import Data.String (toUpper)
 import Data.String.CodeUnits (fromCharArray, toCharArray)
@@ -69,7 +70,56 @@ decDigits base dec =
           q = dec `div` b
           r = dec `mod` b
 
-decToBase :: Base -> Int -> String
-decToBase base dec = fromCharArray $ (lookupBaseDigit base <$> decDigits base dec)
 
-answer = decToBase Hex 33
+decToBase :: Base -> Int -> String
+decToBase base dec = fromCharArray $ lookupBaseDigit base <$> decDigits base dec
+
+-- unsafeHead :: Array a -> a
+-- unsafeHead x:xs = x
+
+-- baseToDecRec :: Array Char -> Int
+-- baseToDecRec [] = 0
+-- baseToDecRec as = case uncons as of
+--     Just { head: x, tail: [] } -> 
+--         case findIndex (\y -> y == x) hexDigits of
+--             Nothing -> 1000000000
+--             Just dec -> dec
+--     Just { head: x, tail: xs } -> 
+--         case findIndex (\y -> y == x) hexDigits of
+--             Nothing -> 1000000000
+--             Just dec -> pow (length xs) dec + (baseToDecRec xs)
+--     Nothing -> 0
+
+
+-- getDecDigitOfHex :: Char -> Int
+-- getDecDigitOfHex x = case findIndex (\y -> y == x) hexDigits of
+--     Nothing -> 0
+--     Just z -> z
+
+getDecDigitOfBase :: Base -> Char -> Int
+getDecDigitOfBase base x = case findIndex (\y -> y == x) (getBaseDigits base) of
+    Nothing -> 0
+    Just z -> z
+
+getDecDigitsOfBase :: Base -> Array Char -> Array Int
+getDecDigitsOfBase base chars = getDecDigitOfBase base <$> chars
+
+baseToDec :: Base -> Array Char -> Int
+baseToDec base chars = sum $ powerUp $ getDecDigitsOfBase base chars 
+
+powerUp :: Array Int -> Array Int
+powerUp as = case uncons as of
+    Just { head:x, tail:[] } -> [x]
+    Just { head:x, tail:xs } -> [x * pow 16 (length xs)] <> powerUp xs
+    Nothing -> [0]
+
+sum :: Array Int -> Int
+sum xs = foldr (+) 0 xs
+
+-- hexToDec :: String -> String
+-- hexToDec s = show $ baseToDecRec $ toCharArray s
+
+
+-- answer = decToBase Hex 33
+answer = show $ baseToDec Base52 ['C', 'D', '1']
+-- answer = show $ pow 2 <$> findIndex (\x -> x=='A') hexDigits
