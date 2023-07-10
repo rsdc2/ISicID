@@ -1,7 +1,6 @@
 module Utils
   ( getBaseDigits
   , getItem
-  , powerUp
   , sum
   , upper
   , base52Digits
@@ -9,6 +8,7 @@ module Utils
   , digitsLcase
   , digitsUcase
   , hexDigits
+  , baseAsDec
   )
   where
 
@@ -35,7 +35,7 @@ hexDigits ∷ Array Char
 hexDigits = digits0to9 <> ['A', 'B', 'C', 'D', 'E', 'F']
 
 base52Digits ∷ Array Char
-base52Digits = digitsLcase <> digitsUcase
+base52Digits = digitsUcase <> digitsLcase
 
 sum :: Array Int -> Int
 sum xs = foldr (+) 0 xs
@@ -48,13 +48,12 @@ upper c = case head $ toCharArray $ toUpper $ fromCharArray [c] of
     Just x -> x
     Nothing -> '-'
 
-powerUp :: Array Int -> Array Int
-powerUp as = case uncons as of
-    Just { head:x, tail:[] } -> [x]
-    Just { head:x, tail:xs } -> [x * pow 16 (length xs)] <> powerUp xs
-    Nothing -> [0]
-
 getBaseDigits :: Base -> Array Char
 getBaseDigits Hex = hexDigits
 getBaseDigits Base52 = base52Digits
 getBaseDigits _ = digits0to9
+
+baseAsDec :: Base -> Int
+baseAsDec Hex = 16
+baseAsDec Base52 = 52
+baseAsDec _ = 10

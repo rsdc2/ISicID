@@ -11,4 +11,5 @@ import Types (Base(..))
 --   log ("The answer is " <> show answer)
 
 main = do
-  log ("The answer is " <> (show $ baseToDec Hex "AF"))
+  -- log ("The answer is " <> (show $ baseToDec Base52 "AF"))
+  log ("The answer is " <> decToBase Base52 10010)
