@@ -51,14 +51,25 @@ lookupBaseDigit b i = case getItem i (getBaseDigits b) of
     Nothing -> '-'
     Just x -> x 
 
+-- decDigits :: Base -> Int -> Array Int
+-- decDigits base dec 
+--     | q == 0 = [r]
+--     | q < b = [q, r]
+--     | otherwise = (decDigits base q) <> [r]
+--     where b = getBaseAsInt base
+--           q = dec `div` b
+--           r = dec `mod` b
+
 decDigits :: Base -> Int -> Array Int
-decDigits base dec = 
-    let b = getBaseAsInt base
-        q = dec `div` b
-        r = dec `mod` b
-    in (if q < b then [q] else decDigits base q) <> [r]
+decDigits base dec =
+    if q == 0 then [r] else
+        if q < b then [q, r] else 
+            (decDigits base q) <> [r]
+    where b = getBaseAsInt base
+          q = dec `div` b
+          r = dec `mod` b
 
 decToBase :: Base -> Int -> String
-decToBase base dec = fromCharArray $ (lookupBaseDigit base <$> decDigits base 10)
+decToBase base dec = fromCharArray $ (lookupBaseDigit base <$> decDigits base dec)
 
-answer = decToBase Dec 10
+answer = decToBase Hex 33
