@@ -2,12 +2,13 @@ module Main where
 
 import Prelude
 
--- import Euler (answer)
-import ISicID (answer)
+import BaseToDec (baseToDec)
+import DecToBase (decToBase)
 import Effect.Console (log)
+import Types (Base(..))
 
 -- main = do
 --   log ("The answer is " <> show answer)
 
 main = do
-  log ("The answer is " <> answer)
+  log ("The answer is " <> (show $ baseToDec Hex "AF"))
