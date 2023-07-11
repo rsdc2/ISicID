@@ -1089,13 +1089,6 @@
     };
   };
 
-  // output/Effect.Console/foreign.js
-  var log2 = function(s) {
-    return function() {
-      console.log(s);
-    };
-  };
-
   // output/Effect.Exception/foreign.js
   function error2(msg) {
     return new Error(msg);
@@ -1364,11 +1357,65 @@
   // output/Web.DOM.Document/index.js
   var toNonElementParentNode = unsafeCoerce2;
 
-  // output/Web.DOM.NonElementParentNode/foreign.js
-  function _getElementById(id) {
+  // output/Web.DOM.Element/foreign.js
+  var getProp = function(name15) {
+    return function(doctype) {
+      return doctype[name15];
+    };
+  };
+  var _namespaceURI = getProp("namespaceURI");
+  var _prefix = getProp("prefix");
+  var localName = getProp("localName");
+  var tagName = getProp("tagName");
+
+  // output/Web.DOM.ParentNode/foreign.js
+  var getEffProp2 = function(name15) {
     return function(node) {
       return function() {
-        return node.getElementById(id);
+        return node[name15];
+      };
+    };
+  };
+  var children = getEffProp2("children");
+  var _firstElementChild = getEffProp2("firstElementChild");
+  var _lastElementChild = getEffProp2("lastElementChild");
+  var childElementCount = getEffProp2("childElementCount");
+
+  // output/Web.DOM.Element/index.js
+  var toNode = unsafeCoerce2;
+
+  // output/Web.DOM.Node/foreign.js
+  var getEffProp3 = function(name15) {
+    return function(node) {
+      return function() {
+        return node[name15];
+      };
+    };
+  };
+  var baseURI = getEffProp3("baseURI");
+  var _ownerDocument = getEffProp3("ownerDocument");
+  var _parentNode = getEffProp3("parentNode");
+  var _parentElement = getEffProp3("parentElement");
+  var childNodes = getEffProp3("childNodes");
+  var _firstChild = getEffProp3("firstChild");
+  var _lastChild = getEffProp3("lastChild");
+  var _previousSibling = getEffProp3("previousSibling");
+  var _nextSibling = getEffProp3("nextSibling");
+  var _nodeValue = getEffProp3("nodeValue");
+  var textContent = getEffProp3("textContent");
+  function setTextContent(value12) {
+    return function(node) {
+      return function() {
+        node.textContent = value12;
+      };
+    };
+  }
+
+  // output/Web.DOM.NonElementParentNode/foreign.js
+  function _getElementById(id2) {
+    return function(node) {
+      return function() {
+        return node.getElementById(id2);
       };
     };
   }
@@ -1450,40 +1497,24 @@
   var show2 = /* @__PURE__ */ show(showInt);
   var bind1 = /* @__PURE__ */ bind(bindMaybe);
   var pure1 = /* @__PURE__ */ pure(applicativeMaybe);
-  var showValue = function(f) {
-    return function(s) {
-      return function __do7() {
-        log2("showValue")();
-        return log2(f(s))();
-      };
+  var setElemTextContent = function(s) {
+    return function(elem2) {
+      var node = toNode(elem2);
+      return setTextContent(s)(node);
     };
-  };
-  var logClick = function(v) {
-    return log2("button clicked");
   };
   var htmlDoc = /* @__PURE__ */ bindFlipped2(document)(windowImpl);
   var getInputValue = function(x) {
     var elem2 = fromElement2(x);
     if (elem2 instanceof Nothing) {
-      return pure2("Error");
+      return pure2("Could not make HTMLInputElement from element");
     }
     ;
     if (elem2 instanceof Just) {
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 122, column 6 - line 124, column 63): " + [elem2.constructor.name]);
-  };
-  var showValueEvent = function(f) {
-    return function(el) {
-      return function(v) {
-        return function __do7() {
-          log2("Showing event")();
-          var s = getInputValue(el)();
-          return showValue(f)(s)();
-        };
-      };
-    };
+    throw new Error("Failed pattern match at Main (line 95, column 6 - line 97, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
     var d = htmlDoc();
@@ -1491,83 +1522,74 @@
   };
   var docAsNode = function __do2() {
     var d = doc();
-    log2("got doc")();
     return toNonElementParentNode(d);
   };
-  var getElem = function(t) {
-    return function(id) {
-      return function __do7() {
-        var docNode = docAsNode();
-        var elem2 = getElementById(id)(docNode)();
-        if (elem2 instanceof Nothing) {
-          return throwException(error2("Did not find node" + id))();
-        }
-        ;
-        if (elem2 instanceof Just) {
-          return elem2.value0;
-        }
-        ;
-        throw new Error("Failed pattern match at Main (line 67, column 3 - line 69, column 21): " + [elem2.constructor.name]);
+  var getElem = function(id2) {
+    return function __do4() {
+      var docNode = docAsNode();
+      var elem2 = getElementById(id2)(docNode)();
+      if (elem2 instanceof Nothing) {
+        return throwException(error2("Did not find node" + id2))();
+      }
+      ;
+      if (elem2 instanceof Just) {
+        return elem2.value0;
+      }
+      ;
+      throw new Error("Failed pattern match at Main (line 62, column 3 - line 64, column 21): " + [elem2.constructor.name]);
+    };
+  };
+  var showValue$prime = function(f) {
+    return function(s) {
+      return function __do4() {
+        var outputElem = getElem("result")();
+        return setElemTextContent(f(s))(outputElem)();
       };
     };
   };
-  var textInput = function __do3() {
-    log2("textInput")();
-    return getElem("input")("text-input")();
+  var showValueEvent = function(f) {
+    return function(elem2) {
+      return function(v) {
+        return function __do4() {
+          var s = getInputValue(elem2)();
+          return showValue$prime(f)(s)();
+        };
+      };
+    };
   };
+  var textInput = /* @__PURE__ */ getElem("text-input");
   var decompressID = function(s) {
     return format(show2(baseToDec(Base52.value)(s)));
   };
-  var decompressButton = function __do4() {
-    log2("decompressButton")();
-    return getElem("button")("decompress-btn")();
-  };
-  var createEventTarget = function(elem2) {
+  var decompressButton = /* @__PURE__ */ getElem("decompress-btn");
+  var createEventTarget$prime = function(elem2) {
     return bind1(fromElement(elem2))(function(htmlelem) {
       return pure1(toEventTarget(htmlelem));
     });
   };
+  var createEventTarget = function(elem2) {
+    var v = createEventTarget$prime(elem2);
+    if (v instanceof Nothing) {
+      return $$throw("Could not create event target");
+    }
+    ;
+    if (v instanceof Just) {
+      return pure2(v.value0);
+    }
+    ;
+    throw new Error("Failed pattern match at Main (line 115, column 26 - line 117, column 23): " + [v.constructor.name]);
+  };
   var compressID = function(s) {
     return decToBase(Base52.value)(removeFormatting(s));
   };
-  var compressButton = function __do5() {
-    log2("compressButton")();
-    return getElem("button")("compress-btn")();
-  };
+  var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";
-  var main = function __do6() {
-    var ti = textInput();
-    var compressEv = showValueEvent(compressID)(ti);
-    var decompressEv = showValueEvent(decompressID)(ti);
-    var compressListener = eventListener(compressEv)();
-    var decompressListener = eventListener(decompressEv)();
-    var logclickListener = eventListener(logClick)();
-    var compressButton$prime1 = compressButton();
-    var decompressButton$prime = decompressButton();
-    var compressEventTarget = function() {
-      var v = createEventTarget(compressButton$prime1);
-      if (v instanceof Nothing) {
-        return $$throw("Could not create event target")();
-      }
-      ;
-      if (v instanceof Just) {
-        return v.value0;
-      }
-      ;
-      throw new Error("Failed pattern match at Main (line 188, column 26 - line 190, column 23): " + [v.constructor.name]);
-    }();
-    var decompressEventTarget = function() {
-      var v = createEventTarget(decompressButton$prime);
-      if (v instanceof Nothing) {
-        return $$throw("Could not create event target")();
-      }
-      ;
-      if (v instanceof Just) {
-        return v.value0;
-      }
-      ;
-      throw new Error("Failed pattern match at Main (line 192, column 28 - line 194, column 23): " + [v.constructor.name]);
-    }();
+  var main = function __do3() {
+    var textInput$prime = textInput();
+    var compressListener = eventListener(showValueEvent(compressID)(textInput$prime))();
+    var decompressListener = eventListener(showValueEvent(decompressID)(textInput$prime))();
+    var compressEventTarget = bindFlipped2(createEventTarget)(compressButton)();
+    var decompressEventTarget = bindFlipped2(createEventTarget)(decompressButton)();
     addEventListener(click2)(compressListener)(true)(compressEventTarget)();
     return addEventListener(click2)(decompressListener)(true)(decompressEventTarget)();
   };
