@@ -1,3 +1,5 @@
+-- Taken from https://github.com/purescript/documentation/blob/master/guides/Getting-Started.md, last accessed 2023-07-11
+
 module Euler where
 
 import Prelude
