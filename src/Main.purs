@@ -8,30 +8,25 @@ module Main
 import Prelude
 
 import BaseToDec (baseToDec)
-import Data.Array.NonEmpty (elem)
 import Data.Either (Either(..))
-import Data.Foldable (traverse_)
-import Data.Int (fromStringAs)
 import Data.Maybe (Maybe(..))
-import Data.Maybe (maybe)
 import DecToBase (decToBase)
-import Effect (Effect(..))
+import Effect (Effect)
 import Effect.Console (log)
-import Effect.Exception (error, throw, throwException, try)
-import Error (throwError)
-import StringFormat (checkValidCompressedForm, checkValidISicTokenID, format, removeFormatting)
+import Effect.Exception (error, throw, throwException)
+import StringFormat (checkValidCompressedForm, format, removeFormatting)
 import Types (Base(..))
-import Web.DOM (Document, Node, NonElementParentNode)
-import Web.DOM.Document (createElement, doctype, toNonElementParentNode)
+import Web.DOM (Document, NonElementParentNode)
+import Web.DOM.Document (toNonElementParentNode)
 import Web.DOM.Element as Element
-import Web.DOM.Node (appendChild, setTextContent, textContent)
+import Web.DOM.Node (setTextContent)
 import Web.DOM.NonElementParentNode (getElementById)
 import Web.Event.Event (EventType(..))
 import Web.Event.EventTarget (EventTarget, addEventListener, eventListener)
 import Web.Event.Internal.Types (Event)
 import Web.HTML (window)
 import Web.HTML.HTMLDocument as HTMLDocument
-import Web.HTML.HTMLElement (fromElement, toEventTarget)
+import Web.HTML.HTMLElement (toEventTarget)
 import Web.HTML.HTMLElement as HTMLElement
 import Web.HTML.HTMLInputElement as HTMLInputElement
 import Web.HTML.Window (document)
