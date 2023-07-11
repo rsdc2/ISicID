@@ -1,5 +1,7 @@
 module StringFormat
-  ( format
+  ( checkValidISicTokenID
+  , checkValidCompressedForm
+  , format
   , removeFormatting
   , rjust
   )
@@ -12,8 +14,11 @@ import Prelude
 import Data.Array (take, drop)
 import Data.String (length)
 import Data.String.CodeUnits (fromCharArray, toCharArray)
+import Data.String.Regex (Regex, parseFlags, regex, test)
+import Effect (Effect(..))
+import Effect.Exception (error, throw, throwException, try)
+import Prim.Boolean (False)
 import Utils (charToStr)
-
 
 rjust :: Int -> Char -> String -> String
 rjust i c s = 
@@ -31,4 +36,18 @@ removeFormatting :: String -> String
 removeFormatting s = 
     let cs = toCharArray s
     in fromCharArray $ (take 6 $ drop 4 $ cs) <> (drop 11 cs) 
--- $ take 4 $ drop 1 $ take 6 $ drop 4 $ 
+
+createRegex :: String -> Either String Regex
+createRegex s = case regex s (parseFlags "g") of
+    Left err -> Left err
+    Right reg -> Right reg
+
+checkValidISicTokenID :: String -> Either String Boolean
+checkValidISicTokenID s = case createRegex "^ISic[0-9]{6}-[0-9]{4}$" of
+    Left err -> Left err
+    Right reg -> Right (test reg s)
+
+checkValidCompressedForm :: String -> Either String Boolean
+checkValidCompressedForm s = case createRegex "^[a-zA-Z]{5}$" of
+    Left err -> Left err
+    Right reg -> Right (test reg s)

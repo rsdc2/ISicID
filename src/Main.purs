@@ -19,7 +19,7 @@ import Effect (Effect(..))
 import Effect.Console (log)
 import Effect.Exception (error, throw, throwException, try)
 import Error (throwError)
-import StringFormat (format, removeFormatting)
+import StringFormat (checkValidCompressedForm, checkValidISicTokenID, format, removeFormatting)
 import Types (Base(..))
 import Web.DOM (Document, Node, NonElementParentNode)
 import Web.DOM.Document (createElement, doctype, toNonElementParentNode)
@@ -35,6 +35,7 @@ import Web.HTML.HTMLElement (fromElement, toEventTarget)
 import Web.HTML.HTMLElement as HTMLElement
 import Web.HTML.HTMLInputElement as HTMLInputElement
 import Web.HTML.Window (document)
+
 
 click :: EventType
 click = EventType "click"
@@ -83,11 +84,16 @@ showValueEvent f elem _ = do
   showValue' f s
 
 decompressID :: String -> String
-decompressID s = format <<< show <<< baseToDec Base52 $ s
+decompressID s = case checkValidCompressedForm s of
+    Left err -> err
+    Right true -> format <<< show <<< baseToDec Base52 $ s
+    Right false -> "Invalid ID"
 
 compressID :: String -> String
-compressID s = decToBase Base52 $ removeFormatting s
--- compressID s = removeFormatting s
+compressID s = case checkValidCompressedForm s of
+    Left err -> err
+    Right true -> decToBase Base52 $ removeFormatting s
+    Right false -> "Invalid ID"
 
 getInputValue :: Element.Element -> Effect String
 getInputValue x = 

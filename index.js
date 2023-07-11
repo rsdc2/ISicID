@@ -367,6 +367,7 @@
     };
   };
   var isNothing = /* @__PURE__ */ maybe(true)(/* @__PURE__ */ $$const(false));
+  var isJust = /* @__PURE__ */ maybe(false)(/* @__PURE__ */ $$const(true));
   var functorMaybe = {
     map: function(v) {
       return function(v1) {
@@ -431,6 +432,28 @@
         return applyMaybe;
       }
     };
+  }();
+
+  // output/Data.Either/index.js
+  var Left = /* @__PURE__ */ function() {
+    function Left2(value0) {
+      this.value0 = value0;
+    }
+    ;
+    Left2.create = function(value0) {
+      return new Left2(value0);
+    };
+    return Left2;
+  }();
+  var Right = /* @__PURE__ */ function() {
+    function Right2(value0) {
+      this.value0 = value0;
+    }
+    ;
+    Right2.create = function(value0) {
+      return new Right2(value0);
+    };
+    return Right2;
   }();
 
   // output/Data.EuclideanRing/foreign.js
@@ -895,6 +918,16 @@
   var length2 = function(s) {
     return s.length;
   };
+  var _indexOf = function(just) {
+    return function(nothing) {
+      return function(x) {
+        return function(s) {
+          var i = s.indexOf(x);
+          return i === -1 ? nothing : just(i);
+        };
+      };
+    };
+  };
   var drop2 = function(n) {
     return function(s) {
       return s.substring(n);
@@ -907,6 +940,17 @@
       if (i >= 0 && i < s.length)
         return s.charAt(i);
       throw new Error("Data.String.Unsafe.charAt: Invalid index.");
+    };
+  };
+
+  // output/Data.String.CodeUnits/index.js
+  var indexOf = /* @__PURE__ */ function() {
+    return _indexOf(Just.create)(Nothing.value);
+  }();
+  var contains = function(pat) {
+    var $23 = indexOf(pat);
+    return function($24) {
+      return isJust($23($24));
     };
   };
 
@@ -1253,6 +1297,85 @@
     return length(toCodePointArray($74));
   };
 
+  // output/Data.String.Regex/foreign.js
+  var regexImpl = function(left) {
+    return function(right) {
+      return function(s1) {
+        return function(s2) {
+          try {
+            return right(new RegExp(s1, s2));
+          } catch (e) {
+            return left(e.message);
+          }
+        };
+      };
+    };
+  };
+  var test = function(r) {
+    return function(s) {
+      var lastIndex = r.lastIndex;
+      var result = r.test(s);
+      r.lastIndex = lastIndex;
+      return result;
+    };
+  };
+
+  // output/Data.String.Regex/index.js
+  var renderFlags = function(v) {
+    return function() {
+      if (v.global) {
+        return "g";
+      }
+      ;
+      return "";
+    }() + (function() {
+      if (v.ignoreCase) {
+        return "i";
+      }
+      ;
+      return "";
+    }() + (function() {
+      if (v.multiline) {
+        return "m";
+      }
+      ;
+      return "";
+    }() + (function() {
+      if (v.dotAll) {
+        return "s";
+      }
+      ;
+      return "";
+    }() + (function() {
+      if (v.sticky) {
+        return "y";
+      }
+      ;
+      return "";
+    }() + function() {
+      if (v.unicode) {
+        return "u";
+      }
+      ;
+      return "";
+    }()))));
+  };
+  var regex = function(s) {
+    return function(f) {
+      return regexImpl(Left.create)(Right.create)(s)(renderFlags(f));
+    };
+  };
+  var parseFlags = function(s) {
+    return {
+      global: contains("g")(s),
+      ignoreCase: contains("i")(s),
+      multiline: contains("m")(s),
+      dotAll: contains("s")(s),
+      sticky: contains("y")(s),
+      unicode: contains("u")(s)
+    };
+  };
+
   // output/StringFormat/index.js
   var append1 = /* @__PURE__ */ append(semigroupArray);
   var rjust = function($copy_i) {
@@ -1264,14 +1387,14 @@
         var $tco_result;
         function $tco_loop(i, c, s) {
           var l = length3(s);
-          var $4 = l === i;
-          if ($4) {
+          var $7 = l === i;
+          if ($7) {
             $tco_done = true;
             return s;
           }
           ;
-          var $5 = l < i;
-          if ($5) {
+          var $8 = l < i;
+          if ($8) {
             $tco_var_i = i;
             $tco_var_c = c;
             $copy_s = charToStr(c) + s;
@@ -1297,6 +1420,30 @@
   var format = function(s) {
     var cs = toCharArray(rjust(10)("0")(s));
     return "ISic" + fromCharArray(append1(take(6)(cs))(append1(["-"])(drop(6)(cs))));
+  };
+  var createRegex = function(s) {
+    var v = regex(s)(parseFlags("g"));
+    if (v instanceof Left) {
+      return new Left(v.value0);
+    }
+    ;
+    if (v instanceof Right) {
+      return new Right(v.value0);
+    }
+    ;
+    throw new Error("Failed pattern match at StringFormat (line 41, column 17 - line 43, column 27): " + [v.constructor.name]);
+  };
+  var checkValidCompressedForm = function(s) {
+    var v = createRegex("^[a-zA-Z]{5}$");
+    if (v instanceof Left) {
+      return new Left(v.value0);
+    }
+    ;
+    if (v instanceof Right) {
+      return new Right(test(v.value0)(s));
+    }
+    ;
+    throw new Error("Failed pattern match at StringFormat (line 51, column 30 - line 53, column 36): " + [v.constructor.name]);
   };
 
   // output/Web.DOM.Document/foreign.js
@@ -1514,7 +1661,7 @@
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 95, column 6 - line 97, column 63): " + [elem2.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 102, column 6 - line 104, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
     var d = htmlDoc();
@@ -1536,7 +1683,7 @@
         return elem2.value0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 62, column 3 - line 64, column 21): " + [elem2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 63, column 3 - line 65, column 21): " + [elem2.constructor.name]);
     };
   };
   var showValue$prime = function(f) {
@@ -1559,7 +1706,20 @@
   };
   var textInput = /* @__PURE__ */ getElem("text-input");
   var decompressID = function(s) {
-    return format(show2(baseToDec(Base52.value)(s)));
+    var v = checkValidCompressedForm(s);
+    if (v instanceof Left) {
+      return v.value0;
+    }
+    ;
+    if (v instanceof Right && v.value0) {
+      return format(show2(baseToDec(Base52.value)(s)));
+    }
+    ;
+    if (v instanceof Right && !v.value0) {
+      return "Invalid ID";
+    }
+    ;
+    throw new Error("Failed pattern match at Main (line 87, column 18 - line 90, column 32): " + [v.constructor.name]);
   };
   var decompressButton = /* @__PURE__ */ getElem("decompress-btn");
   var createEventTarget$prime = function(elem2) {
@@ -1577,10 +1737,23 @@
       return pure2(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 115, column 26 - line 117, column 23): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 122, column 26 - line 124, column 23): " + [v.constructor.name]);
   };
   var compressID = function(s) {
-    return decToBase(Base52.value)(removeFormatting(s));
+    var v = checkValidCompressedForm(s);
+    if (v instanceof Left) {
+      return v.value0;
+    }
+    ;
+    if (v instanceof Right && v.value0) {
+      return decToBase(Base52.value)(removeFormatting(s));
+    }
+    ;
+    if (v instanceof Right && !v.value0) {
+      return "Invalid ID";
+    }
+    ;
+    throw new Error("Failed pattern match at Main (line 93, column 16 - line 96, column 32): " + [v.constructor.name]);
   };
   var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";
