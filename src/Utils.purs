@@ -1,14 +1,15 @@
 module Utils
-  ( getBaseDigits
-  , getItem
-  , sum
-  , upper
-  , base52Digits
+  ( base52Digits
+  , baseAsDec
+  , charToStr
   , digits0to9
   , digitsLcase
   , digitsUcase
+  , getBaseDigits
+  , getItem
   , hexDigits
-  , baseAsDec
+  , sum
+  , upper
   )
   where
 
@@ -43,8 +44,11 @@ sum xs = foldr (+) 0 xs
 getItem :: Int -> Array Char -> Maybe Char
 getItem i xs = xs !! i 
 
+charToStr :: Char -> String
+charToStr c = fromCharArray [c]
+
 upper :: Char -> Char
-upper c = case head $ toCharArray $ toUpper $ fromCharArray [c] of
+upper c = case head $ toCharArray $ toUpper $ charToStr c of
     Just x -> x
     Nothing -> '-'
 
