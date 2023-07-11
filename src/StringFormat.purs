@@ -8,12 +8,11 @@ module StringFormat
   where
 
 import Data.Either (Either(..))
-import Prelude
-
 import Data.Array (take, drop)
 import Data.String (length)
 import Data.String.CodeUnits (fromCharArray, toCharArray)
 import Data.String.Regex (Regex, parseFlags, regex, test)
+import Prelude
 import Utils (charToStr)
 
 rjust :: Int -> Char -> String -> String
