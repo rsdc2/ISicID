@@ -7,17 +7,13 @@ module StringFormat
   )
   where
 
-import Data.Either
-import Effect.Exception
+import Data.Either (Either(..))
 import Prelude
 
 import Data.Array (take, drop)
 import Data.String (length)
 import Data.String.CodeUnits (fromCharArray, toCharArray)
 import Data.String.Regex (Regex, parseFlags, regex, test)
-import Effect (Effect(..))
-import Effect.Exception (error, throw, throwException, try)
-import Prim.Boolean (False)
 import Utils (charToStr)
 
 rjust :: Int -> Char -> String -> String
