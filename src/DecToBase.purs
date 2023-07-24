@@ -7,6 +7,7 @@ import Data.Maybe (Maybe(..), maybe)
 import Data.String.CodeUnits (fromCharArray)
 import Types (Base(..))
 import Utils (getItem, getBaseDigits)
+import StringFormat (rjust)
 
 getBaseAsInt :: Base -> Int
 getBaseAsInt Hex = 16
@@ -29,4 +30,4 @@ decDigits base dec =
           r = dec `mod` b
 
 decToBase :: Base -> String -> String
-decToBase base dec = fromCharArray $ lookupBaseDigit base <$> (decDigits base $ maybe 0 (\x -> x) (fromString dec))
+decToBase base dec = rjust 5 'A' $ fromCharArray $ lookupBaseDigit base <$> (decDigits base $ maybe 0 (\x -> x) (fromString dec))
