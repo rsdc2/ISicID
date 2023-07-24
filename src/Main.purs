@@ -14,7 +14,14 @@ import DecToBase (decToBase)
 import Effect (Effect)
 import Effect.Console (log)
 import Effect.Exception (error, throw, throwException)
-import StringFormat (checkValidCompressedForm, checkValidISicTokenID, format, removeFormatting)
+import StringFormat (
+  checkDecBelowMax,
+  checkBase52ValidLength, 
+  checkValidCompressedForm, 
+  checkValidISicTokenID, 
+  format, 
+  removeFormatting)
+
 import Types (Base(..))
 import Web.DOM (Document, NonElementParentNode)
 import Web.DOM.Document (toNonElementParentNode)
@@ -79,16 +86,29 @@ showValueEvent f elem _ = do
   showValue' f s
 
 decompressID :: String -> String
-decompressID s = case checkValidCompressedForm s of
+decompressID s = case checkBase52ValidLength s of
+  Left err -> err
+  Right false -> "Invalid ID"
+  Right true -> case checkValidCompressedForm s of
     Left err -> err
-    Right true -> format <<< show <<< baseToDec Base52 $ s
+    Right true -> convertToISic s
     Right false -> "Invalid ID"
+  
 
 compressID :: String -> String
 compressID s = case checkValidISicTokenID s of
     Left err -> err
-    Right true -> decToBase Base52 $ removeFormatting s
-    Right false -> "Invalid ID"
+    Right true -> case checkDecBelowMax s of
+      Left err -> err
+      Right true -> convertToBase52 s
+      Right false -> "I.Sicily ID too large"
+    Right false -> "Invalid ID format"
+
+convertToBase52 :: String -> String
+convertToBase52 = decToBase Base52 <<< removeFormatting
+
+convertToISic :: String -> String
+convertToISic = format <<< show <<< baseToDec Base52
 
 getInputValue :: Element.Element -> Effect String
 getInputValue x = 

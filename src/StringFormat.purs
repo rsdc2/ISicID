@@ -1,18 +1,23 @@
 module StringFormat
-  ( checkValidISicTokenID
+  ( checkBase52ValidLength
+  , checkDecBelowMax
   , checkValidCompressedForm
+  , checkValidISicTokenID
   , format
   , removeFormatting
   , rjust
   )
   where
 
-import Data.Either (Either(..))
+import Prelude
+
 import Data.Array (take, drop)
+import Data.Either (Either(..))
+import Data.Int as Int
+import Data.Maybe (Maybe(..))
 import Data.String (length)
 import Data.String.CodeUnits (fromCharArray, toCharArray)
 import Data.String.Regex (Regex, parseFlags, regex, test)
-import Prelude
 import Utils (charToStr)
 
 rjust :: Int -> Char -> String -> String
@@ -41,6 +46,23 @@ checkValidISicTokenID :: String -> Either String Boolean
 checkValidISicTokenID s = case createRegex "^ISic[0-9]{6}-[0-9]{4}$" of
     Left err -> Left err
     Right reg -> Right (test reg s)
+
+isicToInt :: String -> Maybe Int
+isicToInt = Int.fromString <<< removeFormatting
+
+checkDecBelowMax :: String -> Either String Boolean
+checkDecBelowMax s = case isicToInt s of 
+    Nothing -> Left "Could not convert to integer"
+    Just i
+        | i <= 380204031 -> Right true
+        | otherwise -> Right false
+
+checkBase52ValidLength :: String -> Either String Boolean
+checkBase52ValidLength s 
+    | length s == 5 = Right true
+    | length s < 5 = Left "Base 52 form too short"
+    | length s > 5 = Left "Base 52 form too long"
+    | otherwise = Left "Error"
 
 checkValidCompressedForm :: String -> Either String Boolean
 checkValidCompressedForm s = case createRegex "^[a-zA-Z]{5}$" of

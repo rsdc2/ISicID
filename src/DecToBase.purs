@@ -2,7 +2,7 @@ module DecToBase where
 
 import Prelude
 
-import Data.Int (fromString)
+import Data.Int as Int
 import Data.Maybe (Maybe(..), maybe)
 import Data.String.CodeUnits (fromCharArray)
 import Types (Base(..))
@@ -30,4 +30,4 @@ decDigits base dec =
           r = dec `mod` b
 
 decToBase :: Base -> String -> String
-decToBase base dec = rjust 5 'A' $ fromCharArray $ lookupBaseDigit base <$> (decDigits base $ maybe 0 (\x -> x) (fromString dec))
+decToBase base dec = rjust 5 'A' $ fromCharArray $ lookupBaseDigit base <$> (decDigits base $ maybe 0 (\x -> x) (Int.fromString dec))

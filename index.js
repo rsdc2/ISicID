@@ -118,6 +118,9 @@
     };
   };
 
+  // output/Data.Boolean/index.js
+  var otherwise = true;
+
   // output/Data.Function/index.js
   var flip = function(f) {
     return function(b) {
@@ -1316,14 +1319,14 @@
         var $tco_result;
         function $tco_loop(i, c, s) {
           var l = length3(s);
-          var $7 = l === i;
-          if ($7) {
+          var $11 = l === i;
+          if ($11) {
             $tco_done = true;
             return s;
           }
           ;
-          var $8 = l < i;
-          if ($8) {
+          var $12 = l < i;
+          if ($12) {
             $tco_var_i = i;
             $tco_var_c = c;
             $copy_s = charToStr(c) + s;
@@ -1346,6 +1349,9 @@
     var cs = toCharArray(s);
     return fromCharArray(append1(take(6)(drop(4)(cs)))(drop(11)(cs)));
   };
+  var isicToInt = function($25) {
+    return fromString(removeFormatting($25));
+  };
   var format = function(s) {
     var cs = toCharArray(rjust(10)("0")(s));
     return "ISic" + fromCharArray(append1(take(6)(cs))(append1(["-"])(drop(6)(cs))));
@@ -1360,7 +1366,7 @@
       return new Right(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 36, column 17 - line 38, column 27): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 41, column 17 - line 43, column 27): " + [v.constructor.name]);
   };
   var checkValidISicTokenID = function(s) {
     var v = createRegex("^ISic[0-9]{6}-[0-9]{4}$");
@@ -1372,7 +1378,7 @@
       return new Right(test(v.value0)(s));
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 41, column 27 - line 43, column 36): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 46, column 27 - line 48, column 36): " + [v.constructor.name]);
   };
   var checkValidCompressedForm = function(s) {
     var v = createRegex("^[a-zA-Z]{5}$");
@@ -1384,7 +1390,45 @@
       return new Right(test(v.value0)(s));
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 46, column 30 - line 48, column 36): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 68, column 30 - line 70, column 36): " + [v.constructor.name]);
+  };
+  var checkDecBelowMax = function(s) {
+    var v = isicToInt(s);
+    if (v instanceof Nothing) {
+      return new Left("Could not convert to integer");
+    }
+    ;
+    if (v instanceof Just) {
+      if (v.value0 <= 380204031) {
+        return new Right(true);
+      }
+      ;
+      if (otherwise) {
+        return new Right(false);
+      }
+      ;
+    }
+    ;
+    throw new Error("Failed pattern match at StringFormat (line 54, column 22 - line 58, column 35): " + [v.constructor.name]);
+  };
+  var checkBase52ValidLength = function(s) {
+    if (length3(s) === 5) {
+      return new Right(true);
+    }
+    ;
+    if (length3(s) < 5) {
+      return new Left("Base 52 form too short");
+    }
+    ;
+    if (length3(s) > 5) {
+      return new Left("Base 52 form too long");
+    }
+    ;
+    if (otherwise) {
+      return new Left("Error");
+    }
+    ;
+    throw new Error("Failed pattern match at StringFormat (line 60, column 1 - line 60, column 58): " + [s.constructor.name]);
   };
 
   // output/DecToBase/index.js
@@ -1653,7 +1697,6 @@
   // output/Main/index.js
   var bindFlipped2 = /* @__PURE__ */ bindFlipped(bindEffect);
   var pure2 = /* @__PURE__ */ pure(applicativeEffect);
-  var show2 = /* @__PURE__ */ show(showInt);
   var bind1 = /* @__PURE__ */ bind(bindMaybe);
   var pure1 = /* @__PURE__ */ pure(applicativeMaybe);
   var setElemTextContent = function(s) {
@@ -1673,7 +1716,7 @@
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 96, column 6 - line 98, column 63): " + [elem2.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 116, column 6 - line 118, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
     var d = htmlDoc();
@@ -1695,7 +1738,7 @@
         return elem2.value0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 58, column 3 - line 60, column 21): " + [elem2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 65, column 3 - line 67, column 21): " + [elem2.constructor.name]);
     };
   };
   var showValue$prime = function(f) {
@@ -1717,22 +1760,6 @@
     };
   };
   var textInput = /* @__PURE__ */ getElem("text-input");
-  var decompressID = function(s) {
-    var v = checkValidCompressedForm(s);
-    if (v instanceof Left) {
-      return v.value0;
-    }
-    ;
-    if (v instanceof Right && v.value0) {
-      return format(show2(baseToDec(Base52.value)(s)));
-    }
-    ;
-    if (v instanceof Right && !v.value0) {
-      return "Invalid ID";
-    }
-    ;
-    throw new Error("Failed pattern match at Main (line 82, column 18 - line 85, column 32): " + [v.constructor.name]);
-  };
   var decompressButton = /* @__PURE__ */ getElem("decompress-btn");
   var createEventTarget$prime = function(elem2) {
     return bind1(fromElement(elem2))(function(htmlelem) {
@@ -1749,8 +1776,50 @@
       return pure2(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 116, column 26 - line 118, column 23): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 136, column 26 - line 138, column 23): " + [v.constructor.name]);
   };
+  var convertToISic = /* @__PURE__ */ function() {
+    var $41 = show(showInt);
+    var $42 = baseToDec(Base52.value);
+    return function($43) {
+      return format($41($42($43)));
+    };
+  }();
+  var decompressID = function(s) {
+    var v = checkBase52ValidLength(s);
+    if (v instanceof Left) {
+      return v.value0;
+    }
+    ;
+    if (v instanceof Right && !v.value0) {
+      return "Invalid ID";
+    }
+    ;
+    if (v instanceof Right && v.value0) {
+      var v1 = checkValidCompressedForm(s);
+      if (v1 instanceof Left) {
+        return v1.value0;
+      }
+      ;
+      if (v1 instanceof Right && v1.value0) {
+        return convertToISic(s);
+      }
+      ;
+      if (v1 instanceof Right && !v1.value0) {
+        return "Invalid ID";
+      }
+      ;
+      throw new Error("Failed pattern match at Main (line 92, column 17 - line 95, column 32): " + [v1.constructor.name]);
+    }
+    ;
+    throw new Error("Failed pattern match at Main (line 89, column 18 - line 95, column 32): " + [v.constructor.name]);
+  };
+  var convertToBase52 = /* @__PURE__ */ function() {
+    var $44 = decToBase(Base52.value);
+    return function($45) {
+      return $44(removeFormatting($45));
+    };
+  }();
   var compressID = function(s) {
     var v = checkValidISicTokenID(s);
     if (v instanceof Left) {
@@ -1758,14 +1827,27 @@
     }
     ;
     if (v instanceof Right && v.value0) {
-      return decToBase(Base52.value)(removeFormatting(s));
+      var v1 = checkDecBelowMax(s);
+      if (v1 instanceof Left) {
+        return v1.value0;
+      }
+      ;
+      if (v1 instanceof Right && v1.value0) {
+        return convertToBase52(s);
+      }
+      ;
+      if (v1 instanceof Right && !v1.value0) {
+        return "I.Sicily ID too large";
+      }
+      ;
+      throw new Error("Failed pattern match at Main (line 101, column 19 - line 104, column 45): " + [v1.constructor.name]);
     }
     ;
     if (v instanceof Right && !v.value0) {
-      return "Invalid ID";
+      return "Invalid ID format";
     }
     ;
-    throw new Error("Failed pattern match at Main (line 88, column 16 - line 91, column 32): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 99, column 16 - line 105, column 39): " + [v.constructor.name]);
   };
   var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";
