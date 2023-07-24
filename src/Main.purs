@@ -14,14 +14,7 @@ import DecToBase (decToBase)
 import Effect (Effect)
 import Effect.Console (log)
 import Effect.Exception (error, throw, throwException)
-import StringFormat (
-  checkDecBelowMax,
-  checkBase52ValidLength, 
-  checkValidCompressedForm, 
-  checkValidISicTokenID, 
-  format, 
-  removeFormatting)
-
+import StringFormat (checkBase52ValidLength, checkDecBelowMax, checkValidCompressedForm, checkValidISicTokenID, format, removeFormatting)
 import Types (Base(..))
 import Web.DOM (Document, NonElementParentNode)
 import Web.DOM.Document (toNonElementParentNode)
@@ -32,6 +25,7 @@ import Web.Event.Event (EventType(..))
 import Web.Event.EventTarget (EventTarget, addEventListener, eventListener)
 import Web.Event.Internal.Types (Event)
 import Web.HTML (window)
+import Web.HTML.Event.EventTypes (offline)
 import Web.HTML.HTMLDocument as HTMLDocument
 import Web.HTML.HTMLElement (toEventTarget)
 import Web.HTML.HTMLElement as HTMLElement
@@ -87,7 +81,10 @@ showValueEvent f elem _ = do
 
 decompressID :: String -> String
 decompressID s = case checkBase52ValidLength s of
-  Left err -> err
+  Left err -> case checkValidISicTokenID s of
+    Left _ -> err
+    Right true -> "This form is already decompressed."
+    Right false -> "Error"
   Right false -> "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length."
   Right true -> case checkValidCompressedForm s of
     Left err -> err
@@ -96,7 +93,10 @@ decompressID s = case checkBase52ValidLength s of
   
 compressID :: String -> String
 compressID s = case checkValidISicTokenID s of
-    Left err -> err
+    Left err1 -> case checkValidCompressedForm s of
+      Left _ -> err1
+      Right true -> "This form is already compressed."
+      Right false -> "Error"
     Right true -> case checkDecBelowMax s of
       Left err -> err
       Right true -> convertToBase52 s
