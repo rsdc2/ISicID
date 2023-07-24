@@ -15,8 +15,6 @@ to generate this file without the comments in this block.
   [ "arrays"
   , "console"
   , "effect"
-  , "foldable-traversable"
-  , "lists"
   , "maybe"
   , "prelude"
   , "strings"
