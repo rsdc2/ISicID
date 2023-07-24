@@ -119,9 +119,9 @@ createEventTarget elem = case createEventTarget' elem of
 
 main :: Effect Unit
 main = do
-  textInput' <- textInput
-  compressListener <- eventListener $ showValueEvent compressID textInput'
-  decompressListener <- eventListener $ showValueEvent decompressID textInput'
+  inputVal <- textInput
+  compressListener <- eventListener $ showValueEvent compressID inputVal
+  decompressListener <- eventListener $ showValueEvent decompressID inputVal
 
   compressEventTarget <- createEventTarget =<< compressButton
   decompressEventTarget <- createEventTarget =<< decompressButton
