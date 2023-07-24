@@ -1431,7 +1431,19 @@
       return new Right(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 41, column 17 - line 43, column 27): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 36, column 17 - line 38, column 27): " + [v.constructor.name]);
+  };
+  var checkValidISicTokenID = function(s) {
+    var v = createRegex("^ISic[0-9]{6}-[0-9]{4}$");
+    if (v instanceof Left) {
+      return new Left(v.value0);
+    }
+    ;
+    if (v instanceof Right) {
+      return new Right(test(v.value0)(s));
+    }
+    ;
+    throw new Error("Failed pattern match at StringFormat (line 41, column 27 - line 43, column 36): " + [v.constructor.name]);
   };
   var checkValidCompressedForm = function(s) {
     var v = createRegex("^[a-zA-Z]{5}$");
@@ -1443,7 +1455,7 @@
       return new Right(test(v.value0)(s));
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 51, column 30 - line 53, column 36): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 46, column 30 - line 48, column 36): " + [v.constructor.name]);
   };
 
   // output/Web.DOM.Document/foreign.js
@@ -1661,7 +1673,7 @@
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 102, column 6 - line 104, column 63): " + [elem2.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 96, column 6 - line 98, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
     var d = htmlDoc();
@@ -1683,7 +1695,7 @@
         return elem2.value0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 63, column 3 - line 65, column 21): " + [elem2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 58, column 3 - line 60, column 21): " + [elem2.constructor.name]);
     };
   };
   var showValue$prime = function(f) {
@@ -1719,7 +1731,7 @@
       return "Invalid ID";
     }
     ;
-    throw new Error("Failed pattern match at Main (line 87, column 18 - line 90, column 32): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 82, column 18 - line 85, column 32): " + [v.constructor.name]);
   };
   var decompressButton = /* @__PURE__ */ getElem("decompress-btn");
   var createEventTarget$prime = function(elem2) {
@@ -1737,10 +1749,10 @@
       return pure2(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 122, column 26 - line 124, column 23): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 116, column 26 - line 118, column 23): " + [v.constructor.name]);
   };
   var compressID = function(s) {
-    var v = checkValidCompressedForm(s);
+    var v = checkValidISicTokenID(s);
     if (v instanceof Left) {
       return v.value0;
     }
@@ -1753,7 +1765,7 @@
       return "Invalid ID";
     }
     ;
-    throw new Error("Failed pattern match at Main (line 93, column 16 - line 96, column 32): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 88, column 16 - line 91, column 32): " + [v.constructor.name]);
   };
   var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";

@@ -14,7 +14,7 @@ import DecToBase (decToBase)
 import Effect (Effect)
 import Effect.Console (log)
 import Effect.Exception (error, throw, throwException)
-import StringFormat (checkValidCompressedForm, format, removeFormatting)
+import StringFormat (checkValidCompressedForm, checkValidISicTokenID, format, removeFormatting)
 import Types (Base(..))
 import Web.DOM (Document, NonElementParentNode)
 import Web.DOM.Document (toNonElementParentNode)
@@ -85,7 +85,7 @@ decompressID s = case checkValidCompressedForm s of
     Right false -> "Invalid ID"
 
 compressID :: String -> String
-compressID s = case checkValidCompressedForm s of
+compressID s = case checkValidISicTokenID s of
     Left err -> err
     Right true -> decToBase Base52 $ removeFormatting s
     Right false -> "Invalid ID"
@@ -128,4 +128,3 @@ main = do
   
   addEventListener click compressListener true compressEventTarget 
   addEventListener click decompressListener true decompressEventTarget 
-
