@@ -1417,11 +1417,11 @@
     }
     ;
     if (length3(s) < 5) {
-      return new Left("Base 52 form too short");
+      return new Left("Base 52 form too short. Compressed IDs should be five characters in length.");
     }
     ;
     if (length3(s) > 5) {
-      return new Left("Base 52 form too long");
+      return new Left("Base 52 form too long. Compressed IDs should be five characters in length.");
     }
     ;
     if (otherwise) {
@@ -1716,7 +1716,7 @@
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 116, column 6 - line 118, column 63): " + [elem2.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 115, column 6 - line 117, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
     var d = htmlDoc();
@@ -1776,7 +1776,7 @@
       return pure2(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 136, column 26 - line 138, column 23): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 135, column 26 - line 137, column 23): " + [v.constructor.name]);
   };
   var convertToISic = /* @__PURE__ */ function() {
     var $41 = show(showInt);
@@ -1792,7 +1792,7 @@
     }
     ;
     if (v instanceof Right && !v.value0) {
-      return "Invalid ID";
+      return "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length.";
     }
     ;
     if (v instanceof Right && v.value0) {
@@ -1806,13 +1806,13 @@
       }
       ;
       if (v1 instanceof Right && !v1.value0) {
-        return "Invalid ID";
+        return "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length.";
       }
       ;
-      throw new Error("Failed pattern match at Main (line 92, column 17 - line 95, column 32): " + [v1.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 92, column 17 - line 95, column 149): " + [v1.constructor.name]);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 89, column 18 - line 95, column 32): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 89, column 18 - line 95, column 149): " + [v.constructor.name]);
   };
   var convertToBase52 = /* @__PURE__ */ function() {
     var $44 = decToBase(Base52.value);
@@ -1837,17 +1837,17 @@
       }
       ;
       if (v1 instanceof Right && !v1.value0) {
-        return "I.Sicily ID too large";
+        return "I.Sicily ID too large. IDs after ISic038020-4031 cannot be convert.";
       }
       ;
-      throw new Error("Failed pattern match at Main (line 101, column 19 - line 104, column 45): " + [v1.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 100, column 19 - line 103, column 91): " + [v1.constructor.name]);
     }
     ;
     if (v instanceof Right && !v.value0) {
-      return "Invalid ID format";
+      return "Invalid ID format. ISicily token IDs should be of the format ISicXXXXXX-XXXX.";
     }
     ;
-    throw new Error("Failed pattern match at Main (line 99, column 16 - line 105, column 39): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 98, column 16 - line 104, column 99): " + [v.constructor.name]);
   };
   var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";

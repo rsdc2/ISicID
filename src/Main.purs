@@ -88,21 +88,20 @@ showValueEvent f elem _ = do
 decompressID :: String -> String
 decompressID s = case checkBase52ValidLength s of
   Left err -> err
-  Right false -> "Invalid ID"
+  Right false -> "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length."
   Right true -> case checkValidCompressedForm s of
     Left err -> err
     Right true -> convertToISic s
-    Right false -> "Invalid ID"
+    Right false -> "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length."
   
-
 compressID :: String -> String
 compressID s = case checkValidISicTokenID s of
     Left err -> err
     Right true -> case checkDecBelowMax s of
       Left err -> err
       Right true -> convertToBase52 s
-      Right false -> "I.Sicily ID too large"
-    Right false -> "Invalid ID format"
+      Right false -> "I.Sicily ID too large. IDs after ISic038020-4031 cannot be convert."
+    Right false -> "Invalid ID format. ISicily token IDs should be of the format ISicXXXXXX-XXXX."
 
 convertToBase52 :: String -> String
 convertToBase52 = decToBase Base52 <<< removeFormatting

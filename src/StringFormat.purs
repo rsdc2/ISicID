@@ -60,8 +60,8 @@ checkDecBelowMax s = case isicToInt s of
 checkBase52ValidLength :: String -> Either String Boolean
 checkBase52ValidLength s 
     | length s == 5 = Right true
-    | length s < 5 = Left "Base 52 form too short"
-    | length s > 5 = Left "Base 52 form too long"
+    | length s < 5 = Left "Base 52 form too short. Compressed IDs should be five characters in length."
+    | length s > 5 = Left "Base 52 form too long. Compressed IDs should be five characters in length."
     | otherwise = Left "Error"
 
 checkValidCompressedForm :: String -> Either String Boolean
