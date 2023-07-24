@@ -80,23 +80,21 @@ showValueEvent f elem _ = do
   showValue' f s
 
 decompressID :: String -> String
-decompressID s = case checkBase52ValidLength s of
-  Left err -> case checkValidISicTokenID s of
-    Left _ -> err
-    Right true -> "This form is already decompressed."
-    Right false -> "Error"
-  Right false -> "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length."
-  Right true -> case checkValidCompressedForm s of
+decompressID s = case checkValidISicTokenID s of
+  Right true -> "This form does not need to be decompressed."
+  _ -> case checkBase52ValidLength s of
     Left err -> err
-    Right true -> convertToISic s
-    Right false -> "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length."
+    Right true -> case checkValidCompressedForm s of
+      Left err -> err
+      Right true -> convertToISic s
+      Right false -> "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be 5 characters in length."
+    Right false -> "Error"
   
 compressID :: String -> String
-compressID s = case checkValidISicTokenID s of
-    Left err1 -> case checkValidCompressedForm s of
-      Left _ -> err1
-      Right true -> "This form is already compressed."
-      Right false -> "Error"
+compressID s = case checkValidCompressedForm s of
+  Right true -> "This form is already compressed."
+  _ -> case checkValidISicTokenID s of
+    Left err -> err
     Right true -> case checkDecBelowMax s of
       Left err -> err
       Right true -> convertToBase52 s

@@ -31,3 +31,4 @@ decDigits base dec =
 
 decToBase :: Base -> String -> String
 decToBase base dec = rjust 5 'A' $ fromCharArray $ lookupBaseDigit base <$> (decDigits base $ maybe 0 (\x -> x) (Int.fromString dec))
+

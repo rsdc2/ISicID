@@ -1417,11 +1417,11 @@
     }
     ;
     if (length3(s) < 5) {
-      return new Left("Base 52 form too short. Compressed IDs should be five characters in length.");
+      return new Left("Base 52 form is too short. Compressed IDs should be 5 characters in length.");
     }
     ;
     if (length3(s) > 5) {
-      return new Left("Base 52 form too long. Compressed IDs should be five characters in length.");
+      return new Left("Base 52 form is too long. Compressed IDs should be 5 characters in length.");
     }
     ;
     if (otherwise) {
@@ -1716,7 +1716,7 @@
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 115, column 6 - line 117, column 63): " + [elem2.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 113, column 6 - line 115, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
     var d = htmlDoc();
@@ -1776,104 +1776,88 @@
       return pure2(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 135, column 26 - line 137, column 23): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 133, column 26 - line 135, column 23): " + [v.constructor.name]);
   };
   var convertToISic = /* @__PURE__ */ function() {
-    var $51 = show(showInt);
-    var $52 = baseToDec(Base52.value);
-    return function($53) {
-      return format($51($52($53)));
+    var $47 = show(showInt);
+    var $48 = baseToDec(Base52.value);
+    return function($49) {
+      return format($47($48($49)));
     };
   }();
   var decompressID = function(s) {
-    var v = checkBase52ValidLength(s);
-    if (v instanceof Left) {
-      var v1 = checkValidISicTokenID(s);
-      if (v1 instanceof Left) {
-        return v.value0;
-      }
-      ;
-      if (v1 instanceof Right && v1.value0) {
-        return "This form is already decompressed.";
-      }
-      ;
-      if (v1 instanceof Right && !v1.value0) {
-        return "Error";
-      }
-      ;
-      throw new Error("Failed pattern match at Main (line 84, column 15 - line 87, column 27): " + [v1.constructor.name]);
-    }
-    ;
-    if (v instanceof Right && !v.value0) {
-      return "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length.";
-    }
-    ;
+    var v = checkValidISicTokenID(s);
     if (v instanceof Right && v.value0) {
-      var v1 = checkValidCompressedForm(s);
-      if (v1 instanceof Left) {
-        return v1.value0;
+      return "This form does not need to be decompressed.";
+    }
+    ;
+    var v1 = checkBase52ValidLength(s);
+    if (v1 instanceof Left) {
+      return v1.value0;
+    }
+    ;
+    if (v1 instanceof Right && v1.value0) {
+      var v2 = checkValidCompressedForm(s);
+      if (v2 instanceof Left) {
+        return v2.value0;
       }
       ;
-      if (v1 instanceof Right && v1.value0) {
+      if (v2 instanceof Right && v2.value0) {
         return convertToISic(s);
       }
       ;
-      if (v1 instanceof Right && !v1.value0) {
-        return "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be five characters in length.";
+      if (v2 instanceof Right && !v2.value0) {
+        return "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be 5 characters in length.";
       }
       ;
-      throw new Error("Failed pattern match at Main (line 89, column 17 - line 92, column 149): " + [v1.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 87, column 19 - line 90, column 148): " + [v2.constructor.name]);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 83, column 18 - line 92, column 149): " + [v.constructor.name]);
+    if (v1 instanceof Right && !v1.value0) {
+      return "Error";
+    }
+    ;
+    throw new Error("Failed pattern match at Main (line 85, column 8 - line 91, column 27): " + [v1.constructor.name]);
   };
   var convertToBase52 = /* @__PURE__ */ function() {
-    var $54 = decToBase(Base52.value);
-    return function($55) {
-      return $54(removeFormatting($55));
+    var $50 = decToBase(Base52.value);
+    return function($51) {
+      return $50(removeFormatting($51));
     };
   }();
   var compressID = function(s) {
-    var v = checkValidISicTokenID(s);
-    if (v instanceof Left) {
-      var v1 = checkValidCompressedForm(s);
-      if (v1 instanceof Left) {
-        return v.value0;
-      }
-      ;
-      if (v1 instanceof Right && v1.value0) {
-        return "This form is already compressed.";
-      }
-      ;
-      if (v1 instanceof Right && !v1.value0) {
-        return "Error";
-      }
-      ;
-      throw new Error("Failed pattern match at Main (line 96, column 18 - line 99, column 29): " + [v1.constructor.name]);
+    var v = checkValidCompressedForm(s);
+    if (v instanceof Right && v.value0) {
+      return "This form is already compressed.";
     }
     ;
-    if (v instanceof Right && v.value0) {
-      var v1 = checkDecBelowMax(s);
-      if (v1 instanceof Left) {
-        return v1.value0;
+    var v1 = checkValidISicTokenID(s);
+    if (v1 instanceof Left) {
+      return v1.value0;
+    }
+    ;
+    if (v1 instanceof Right && v1.value0) {
+      var v2 = checkDecBelowMax(s);
+      if (v2 instanceof Left) {
+        return v2.value0;
       }
       ;
-      if (v1 instanceof Right && v1.value0) {
+      if (v2 instanceof Right && v2.value0) {
         return convertToBase52(s);
       }
       ;
-      if (v1 instanceof Right && !v1.value0) {
+      if (v2 instanceof Right && !v2.value0) {
         return "I.Sicily ID too large. IDs after ISic038020-4031 cannot be convert.";
       }
       ;
-      throw new Error("Failed pattern match at Main (line 100, column 19 - line 103, column 91): " + [v1.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 98, column 19 - line 101, column 91): " + [v2.constructor.name]);
     }
     ;
-    if (v instanceof Right && !v.value0) {
+    if (v1 instanceof Right && !v1.value0) {
       return "Invalid ID format. ISicily token IDs should be of the format ISicXXXXXX-XXXX.";
     }
     ;
-    throw new Error("Failed pattern match at Main (line 95, column 16 - line 104, column 99): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 96, column 8 - line 102, column 99): " + [v1.constructor.name]);
   };
   var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";
