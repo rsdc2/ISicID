@@ -1077,77 +1077,6 @@
     };
   };
 
-  // output/DecToBase/index.js
-  var div2 = /* @__PURE__ */ div(euclideanRingInt);
-  var mod2 = /* @__PURE__ */ mod(euclideanRingInt);
-  var append4 = /* @__PURE__ */ append(semigroupArray);
-  var map4 = /* @__PURE__ */ map(functorArray);
-  var lookupBaseDigit = function(b) {
-    return function(i) {
-      var v = getItem(i)(getBaseDigits(b));
-      if (v instanceof Nothing) {
-        return "-";
-      }
-      ;
-      if (v instanceof Just) {
-        return v.value0;
-      }
-      ;
-      throw new Error("Failed pattern match at DecToBase (line 17, column 23 - line 19, column 16): " + [v.constructor.name]);
-    };
-  };
-  var getBaseAsInt = function(v) {
-    if (v instanceof Hex) {
-      return 16;
-    }
-    ;
-    if (v instanceof Base52) {
-      return 52;
-    }
-    ;
-    return 10;
-  };
-  var decDigits = function(base) {
-    return function(dec) {
-      var b = getBaseAsInt(base);
-      var q = div2(dec)(b);
-      var r = mod2(dec)(b);
-      var $11 = q === 0;
-      if ($11) {
-        return [r];
-      }
-      ;
-      var $12 = q < b;
-      if ($12) {
-        return [q, r];
-      }
-      ;
-      return append4(decDigits(base)(q))([r]);
-    };
-  };
-  var decToBase = function(base) {
-    return function(dec) {
-      return fromCharArray(map4(lookupBaseDigit(base))(decDigits(base)(maybe(0)(function(x) {
-        return x;
-      })(fromString(dec)))));
-    };
-  };
-
-  // output/Effect.Exception/foreign.js
-  function error2(msg) {
-    return new Error(msg);
-  }
-  function throwException(e) {
-    return function() {
-      throw e;
-    };
-  }
-
-  // output/Effect.Exception/index.js
-  var $$throw = function($4) {
-    return throwException(error2($4));
-  };
-
   // output/Data.String.CodePoints/foreign.js
   var hasArrayFrom = typeof Array.from === "function";
   var hasStringIterator = typeof Symbol !== "undefined" && Symbol != null && typeof Symbol.iterator !== "undefined" && typeof String.prototype[Symbol.iterator] === "function";
@@ -1227,7 +1156,7 @@
 
   // output/Data.String.CodePoints/index.js
   var fromEnum2 = /* @__PURE__ */ fromEnum(boundedEnumChar);
-  var map5 = /* @__PURE__ */ map(functorMaybe);
+  var map4 = /* @__PURE__ */ map(functorMaybe);
   var unfoldr2 = /* @__PURE__ */ unfoldr(unfoldableArray);
   var unsurrogate = function(lead) {
     return function(trail) {
@@ -1269,7 +1198,7 @@
     });
   };
   var unconsButWithTuple = function(s) {
-    return map5(function(v) {
+    return map4(function(v) {
       return new Tuple(v.head, v.tail);
     })(uncons2(s));
   };
@@ -1456,6 +1385,77 @@
     }
     ;
     throw new Error("Failed pattern match at StringFormat (line 46, column 30 - line 48, column 36): " + [v.constructor.name]);
+  };
+
+  // output/DecToBase/index.js
+  var div2 = /* @__PURE__ */ div(euclideanRingInt);
+  var mod2 = /* @__PURE__ */ mod(euclideanRingInt);
+  var append4 = /* @__PURE__ */ append(semigroupArray);
+  var map5 = /* @__PURE__ */ map(functorArray);
+  var lookupBaseDigit = function(b) {
+    return function(i) {
+      var v = getItem(i)(getBaseDigits(b));
+      if (v instanceof Nothing) {
+        return "-";
+      }
+      ;
+      if (v instanceof Just) {
+        return v.value0;
+      }
+      ;
+      throw new Error("Failed pattern match at DecToBase (line 18, column 23 - line 20, column 16): " + [v.constructor.name]);
+    };
+  };
+  var getBaseAsInt = function(v) {
+    if (v instanceof Hex) {
+      return 16;
+    }
+    ;
+    if (v instanceof Base52) {
+      return 52;
+    }
+    ;
+    return 10;
+  };
+  var decDigits = function(base) {
+    return function(dec) {
+      var b = getBaseAsInt(base);
+      var q = div2(dec)(b);
+      var r = mod2(dec)(b);
+      var $11 = q === 0;
+      if ($11) {
+        return [r];
+      }
+      ;
+      var $12 = q < b;
+      if ($12) {
+        return [q, r];
+      }
+      ;
+      return append4(decDigits(base)(q))([r]);
+    };
+  };
+  var decToBase = function(base) {
+    return function(dec) {
+      return rjust(5)("A")(fromCharArray(map5(lookupBaseDigit(base))(decDigits(base)(maybe(0)(function(x) {
+        return x;
+      })(fromString(dec))))));
+    };
+  };
+
+  // output/Effect.Exception/foreign.js
+  function error2(msg) {
+    return new Error(msg);
+  }
+  function throwException(e) {
+    return function() {
+      throw e;
+    };
+  }
+
+  // output/Effect.Exception/index.js
+  var $$throw = function($4) {
+    return throwException(error2($4));
   };
 
   // output/Web.DOM.Document/foreign.js
@@ -1770,9 +1770,9 @@
   var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";
   var main = function __do3() {
-    var textInput$prime = textInput();
-    var compressListener = eventListener(showValueEvent(compressID)(textInput$prime))();
-    var decompressListener = eventListener(showValueEvent(decompressID)(textInput$prime))();
+    var inputVal = textInput();
+    var compressListener = eventListener(showValueEvent(compressID)(inputVal))();
+    var decompressListener = eventListener(showValueEvent(decompressID)(inputVal))();
     var compressEventTarget = bindFlipped2(createEventTarget)(compressButton)();
     var decompressEventTarget = bindFlipped2(createEventTarget)(decompressButton)();
     addEventListener(click2)(compressListener)(true)(compressEventTarget)();
