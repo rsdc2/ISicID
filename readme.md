@@ -34,7 +34,7 @@ The maximum Base 52 number is ```zzzzz```, which corresponds to ```380204031 -> 
 
 Follow this link:
 
-    [https://rsdc2.github.io/ISicID/](https://rsdc2.github.io/ISicID/)
+[https://rsdc2.github.io/ISicID/](https://rsdc2.github.io/ISicID/)
 
 ### Running
 
