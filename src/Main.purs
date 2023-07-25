@@ -143,5 +143,5 @@ main = do
   compressEventTarget <- createEventTarget =<< compressButton
   decompressEventTarget <- createEventTarget =<< decompressButton
   
-  addEventListener click compressListener true compressEventTarget 
-  addEventListener click decompressListener true decompressEventTarget 
+  addEventListener click compressListener false compressEventTarget 
+  addEventListener click decompressListener false decompressEventTarget 

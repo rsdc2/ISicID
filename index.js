@@ -1867,8 +1867,8 @@
     var decompressListener = eventListener(showValueEvent(decompressID)(inputVal))();
     var compressEventTarget = bindFlipped2(createEventTarget)(compressButton)();
     var decompressEventTarget = bindFlipped2(createEventTarget)(decompressButton)();
-    addEventListener(click2)(compressListener)(true)(compressEventTarget)();
-    return addEventListener(click2)(decompressListener)(true)(decompressEventTarget)();
+    addEventListener(click2)(compressListener)(false)(compressEventTarget)();
+    return addEventListener(click2)(decompressListener)(false)(decompressEventTarget)();
   };
 
   // <stdin>
