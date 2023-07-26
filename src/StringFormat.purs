@@ -18,6 +18,7 @@ import Data.Maybe (Maybe(..))
 import Data.String (length)
 import Data.String.CodeUnits (fromCharArray, toCharArray)
 import Data.String.Regex (Regex, parseFlags, regex, test)
+import Errors as Err
 import Utils (charToStr)
 
 rjust :: Int -> Char -> String -> String
@@ -60,8 +61,8 @@ checkDecBelowMax s = case isicToInt s of
 checkBase52ValidLength :: String -> Either String Boolean
 checkBase52ValidLength s 
     | length s == 5 = Right true
-    | length s < 5 = Left "Base 52 form is too short. Compressed IDs should be 5 characters in length."
-    | length s > 5 = Left "Base 52 form is too long. Compressed IDs should be 5 characters in length."
+    | length s < 5 = Left Err.base52TooShortErr
+    | length s > 5 = Left Err.base52TooLongErr
     | otherwise = Left "Error"
 
 checkValidCompressedForm :: String -> Either String Boolean

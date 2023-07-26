@@ -14,6 +14,7 @@ import DecToBase (decToBase)
 import Effect (Effect)
 import Effect.Console (log)
 import Effect.Exception (error, throw, throwException)
+import Errors as Err
 import StringFormat (checkBase52ValidLength, checkDecBelowMax, checkValidCompressedForm, checkValidISicTokenID, format, removeFormatting)
 import Types (Base(..))
 import Web.DOM (Document, NonElementParentNode)
@@ -25,7 +26,6 @@ import Web.Event.Event (EventType(..))
 import Web.Event.EventTarget (EventTarget, addEventListener, eventListener)
 import Web.Event.Internal.Types (Event)
 import Web.HTML (window)
-import Web.HTML.Event.EventTypes (offline)
 import Web.HTML.HTMLDocument as HTMLDocument
 import Web.HTML.HTMLElement (toEventTarget)
 import Web.HTML.HTMLElement as HTMLElement
@@ -81,25 +81,25 @@ showValueEvent f elem _ = do
 
 decompressID :: String -> String
 decompressID s = case checkValidISicTokenID s of
-  Right true -> "This form does not need to be decompressed."
+  Right true -> Err.alreadyDecompressedErr
   _ -> case checkBase52ValidLength s of
     Left err -> err
     Right true -> case checkValidCompressedForm s of
       Left err -> err
       Right true -> convertToISic s
-      Right false -> "Invalid ID. Compressed IDs should be composed of either upper or lower case Roman characters, and be 5 characters in length."
+      Right false -> Err.invalidISicIDErr
     Right false -> "Error"
   
 compressID :: String -> String
 compressID s = case checkValidCompressedForm s of
-  Right true -> "This form is already compressed."
+  Right true -> Err.alreadyCompressedErr
   _ -> case checkValidISicTokenID s of
     Left err -> err
     Right true -> case checkDecBelowMax s of
       Left err -> err
       Right true -> convertToBase52 s
-      Right false -> "I.Sicily ID too large. IDs after ISic038020-4031 cannot be convert."
-    Right false -> "Invalid ID format. ISicily token IDs should be of the format ISicXXXXXX-XXXX."
+      Right false -> Err.iSicTooLargeErr
+    Right false -> Err.invalidISicIDFormatErr
 
 convertToBase52 :: String -> String
 convertToBase52 = decToBase Base52 <<< removeFormatting
