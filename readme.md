@@ -6,7 +6,7 @@ This is a resolver for token IDs on token elements in the [I.Sicily](https://git
 
 ### Background
 
-I.Sicily token IDs are underlyingly of the form ```ISicXXXXXX-XXXX```, where the first six digits ```XXXXXX``` correspond to the document ID; the four digits ```XXXX``` after the dash correspond to a number assigned to each token in the document. These are sequentially ordered through the document. However, to provide flexibility for the insertion of extra tokens in future, token IDs have a trailing ```0```, giving 9 extra IDs on each side for new tokens. (It is, of course, highly unlikely that all this extra space will be needed.) 
+I.Sicily token IDs are underlyingly of the form ```ISic012345-6789```, where the first six digits ```012345``` correspond to the document ID; the four digits ```6789``` after the dash correspond to a number assigned to each token in the document. These are sequentially ordered through the document. However, to provide flexibility for the insertion of extra tokens in future, token IDs have a trailing ```0```, giving 9 extra IDs on each side for new tokens. (It is, of course, highly unlikely that all this extra space will be needed.) 
 
 For example ```ISic000001-0020``` would in in principle represent the second token in the document ```ISic000001```.
 
