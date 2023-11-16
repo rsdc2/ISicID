@@ -1,8 +1,4 @@
-module Main
-  ( getInputValue
-  , main
-  , showValue
-  )
+module Main (main)
   where
 
 import Prelude
@@ -36,12 +32,12 @@ import Web.HTML.Window (document)
 click :: EventType
 click = EventType "click"
 
-htmlDoc :: Effect HTMLDocument.HTMLDocument
-htmlDoc = document =<< window
+windowDoc :: Effect HTMLDocument.HTMLDocument
+windowDoc = document =<< window
 
 doc :: Effect Document
 doc = do 
-  d <- htmlDoc
+  d <- windowDoc
   pure $ HTMLDocument.toDocument d
 
 docAsNode :: Effect NonElementParentNode
