@@ -49,6 +49,9 @@ git clone https://github.com/rsdc2/ISicID.git
 ### Building
 
 The ID resolver is written in [PureScript](https://www.purescript.org/), a functional programming language similar to [Haskell](https://www.haskell.org/).
+
+To build, you will need a recent version of [Node.js](https://nodejs.org/en/). It has been tested on Node 20.9.0 LTS.
+
 To build and run locally:
 
 ```
