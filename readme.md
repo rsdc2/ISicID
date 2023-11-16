@@ -61,6 +61,10 @@ npm install
 npx spago bundle-app
 ```
 
+## Dependencies
+
+For dependency licenses, see the `LICENSES` directory.
+
 ## Acknowledgements
 
 The software for the Token ID resolver was written by Robert Crellin as part of the Crossreads project at the Faculty of Classics, University of Oxford, and is licensed under the BSD 3-clause license. This project has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 885040, “Crossreads”).
