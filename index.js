@@ -1708,13 +1708,13 @@
   var pure2 = /* @__PURE__ */ pure(applicativeEffect);
   var bind1 = /* @__PURE__ */ bind(bindMaybe);
   var pure1 = /* @__PURE__ */ pure(applicativeMaybe);
+  var windowDoc = /* @__PURE__ */ bindFlipped2(document)(windowImpl);
   var setElemTextContent = function(s) {
     return function(elem2) {
       var node = toNode(elem2);
       return setTextContent(s)(node);
     };
   };
-  var htmlDoc = /* @__PURE__ */ bindFlipped2(document)(windowImpl);
   var getInputValue = function(x) {
     var elem2 = fromElement2(x);
     if (elem2 instanceof Nothing) {
@@ -1725,10 +1725,10 @@
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 113, column 6 - line 115, column 63): " + [elem2.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 109, column 6 - line 111, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
-    var d = htmlDoc();
+    var d = windowDoc();
     return toDocument(d);
   };
   var docAsNode = function __do2() {
@@ -1747,7 +1747,7 @@
         return elem2.value0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 59, column 3 - line 61, column 21): " + [elem2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 55, column 3 - line 57, column 21): " + [elem2.constructor.name]);
     };
   };
   var showValue$prime = function(f) {
@@ -1785,7 +1785,7 @@
       return pure2(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 133, column 26 - line 135, column 23): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 129, column 26 - line 131, column 23): " + [v.constructor.name]);
   };
   var convertToISic = /* @__PURE__ */ function() {
     var $47 = show(showInt);
@@ -1819,14 +1819,14 @@
         return invalidISicIDErr;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 87, column 19 - line 90, column 42): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 83, column 19 - line 86, column 42): " + [v2.constructor.name]);
     }
     ;
     if (v1 instanceof Right && !v1.value0) {
       return "Error";
     }
     ;
-    throw new Error("Failed pattern match at Main (line 85, column 8 - line 91, column 27): " + [v1.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 81, column 8 - line 87, column 27): " + [v1.constructor.name]);
   };
   var convertToBase52 = /* @__PURE__ */ function() {
     var $50 = decToBase(Base52.value);
@@ -1859,14 +1859,14 @@
         return iSicTooLargeErr;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 98, column 19 - line 101, column 41): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 94, column 19 - line 97, column 41): " + [v2.constructor.name]);
     }
     ;
     if (v1 instanceof Right && !v1.value0) {
       return invalidISicIDFormatErr;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 96, column 8 - line 102, column 46): " + [v1.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 92, column 8 - line 98, column 46): " + [v1.constructor.name]);
   };
   var compressButton = /* @__PURE__ */ getElem("compress-btn");
   var click2 = "click";
