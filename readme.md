@@ -74,6 +74,3 @@ I found the following links helpful on conversion between bases:
 - [https://iq.opengenus.org/convert-decimal-to-hexadecimal/](https://iq.opengenus.org/convert-decimal-to-hexadecimal/), last accessed 24th July 2023
 - [https://en.wikipedia.org/wiki/Positional_notation#Base_conversion](https://en.wikipedia.org/wiki/Positional_notation#Base_conversion), last accessed 24th July 2023
 
-I found the following links helpful for implementing various features in PureScript:
-- [https://stackoverflow.com/questions/70030793/how-do-i-add-an-onclick-listener-in-plain-purescript](https://stackoverflow.com/questions/70030793/how-do-i-add-an-onclick-listener-in-plain-purescript), last accessed 24th July 2023
-- [https://github.com/JordanMartinez/purescript-cookbook/blob/master/recipes/GroceriesJs/src/Main.purs](https://github.com/JordanMartinez/purescript-cookbook/blob/master/recipes/GroceriesJs/src/Main.purs), last accessed 24th July 2023

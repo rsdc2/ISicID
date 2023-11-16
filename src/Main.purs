@@ -141,3 +141,8 @@ main = do
   
   addEventListener click compressListener false compressEventTarget 
   addEventListener click decompressListener false decompressEventTarget 
+
+-- For suggestions on how to implement onclick listener in PureScript, see:
+--  https://stackoverflow.com/questions/70030793/how-do-i-add-an-onclick-listener-in-plain-purescript
+-- More generally, see 
+--  https://github.com/JordanMartinez/purescript-cookbook/blob/master/recipes/GroceriesJs/src/Main.purs
