@@ -958,6 +958,13 @@
   };
 
   // output/Data.String.Common/foreign.js
+  var replace = function(s1) {
+    return function(s2) {
+      return function(s3) {
+        return s3.replace(s1, s2);
+      };
+    };
+  };
   var toUpper = function(s) {
     return s.toUpperCase();
   };
@@ -1002,7 +1009,7 @@
     }
     ;
     if (v instanceof Nothing) {
-      return "-";
+      return "?";
     }
     ;
     throw new Error("Failed pattern match at Utils (line 51, column 11 - line 53, column 19): " + [v.constructor.name]);
@@ -1328,14 +1335,14 @@
         var $tco_result;
         function $tco_loop(i, c, s) {
           var l = length3(s);
-          var $11 = l === i;
-          if ($11) {
+          var $10 = l === i;
+          if ($10) {
             $tco_done = true;
             return s;
           }
           ;
-          var $12 = l < i;
-          if ($12) {
+          var $11 = l < i;
+          if ($11) {
             $tco_var_i = i;
             $tco_var_c = c;
             $copy_s = charToStr(c) + s;
@@ -1354,15 +1361,18 @@
       };
     };
   };
-  var removeFormatting = function(s) {
-    var cs = toCharArray(s);
-    return fromCharArray(append1(take(6)(drop(4)(cs)))(drop(11)(cs)));
-  };
-  var isicToInt = function($25) {
-    return fromString(removeFormatting($25));
+  var removeFormatting = /* @__PURE__ */ function() {
+    var $24 = replace("ISic")("");
+    var $25 = replace("-")("");
+    return function($26) {
+      return $24($25($26));
+    };
+  }();
+  var isicToInt = function($27) {
+    return fromString(removeFormatting($27));
   };
   var format = function(s) {
-    var cs = toCharArray(rjust(10)("0")(s));
+    var cs = toCharArray(rjust(11)("0")(s));
     return "ISic" + fromCharArray(append1(take(6)(cs))(append1(["-"])(drop(6)(cs))));
   };
   var createRegex = function(s) {
@@ -1375,10 +1385,10 @@
       return new Right(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 42, column 17 - line 44, column 27): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 41, column 17 - line 43, column 27): " + [v.constructor.name]);
   };
   var checkValidISicTokenID = function(s) {
-    var v = createRegex("^ISic[0-9]{6}-[0-9]{4}$");
+    var v = createRegex("^ISic[0-9]{6}-[0-9]{5}$");
     if (v instanceof Left) {
       return new Left(v.value0);
     }
@@ -1387,10 +1397,10 @@
       return new Right(test(v.value0)(s));
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 47, column 27 - line 49, column 36): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 46, column 27 - line 48, column 36): " + [v.constructor.name]);
   };
   var checkValidCompressedForm = function(s) {
-    var v = createRegex("^[a-zA-Z]{5}$");
+    var v = createRegex("^[a-zA-Z]{6}$");
     if (v instanceof Left) {
       return new Left(v.value0);
     }
@@ -1404,32 +1414,25 @@
   var checkDecBelowMax = function(s) {
     var v = isicToInt(s);
     if (v instanceof Nothing) {
-      return new Left("Could not convert to integer");
+      return new Left("Could not convert to integer: " + removeFormatting(s));
     }
     ;
     if (v instanceof Just) {
-      if (v.value0 <= 380204031) {
-        return new Right(true);
-      }
-      ;
-      if (otherwise) {
-        return new Right(false);
-      }
-      ;
-    }
-    ;
-    throw new Error("Failed pattern match at StringFormat (line 55, column 22 - line 59, column 35): " + [v.constructor.name]);
-  };
-  var checkBase52ValidLength = function(s) {
-    if (length3(s) === 5) {
       return new Right(true);
     }
     ;
-    if (length3(s) < 5) {
+    throw new Error("Failed pattern match at StringFormat (line 54, column 22 - line 56, column 25): " + [v.constructor.name]);
+  };
+  var checkBase52ValidLength = function(s) {
+    if (length3(s) === 6) {
+      return new Right(true);
+    }
+    ;
+    if (length3(s) < 6) {
       return new Left(base52TooShortErr);
     }
     ;
-    if (length3(s) > 5) {
+    if (length3(s) > 6) {
       return new Left(base52TooLongErr);
     }
     ;
@@ -1449,14 +1452,14 @@
     return function(i) {
       var v = getItem(i)(getBaseDigits(b));
       if (v instanceof Nothing) {
-        return "-";
+        return "?";
       }
       ;
       if (v instanceof Just) {
         return v.value0;
       }
       ;
-      throw new Error("Failed pattern match at DecToBase (line 18, column 23 - line 20, column 16): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at DecToBase (line 23, column 23 - line 25, column 16): " + [v.constructor.name]);
     };
   };
   var getBaseAsInt = function(v) {
@@ -1490,7 +1493,7 @@
   };
   var decToBase = function(base) {
     return function(dec) {
-      return rjust(5)("A")(fromCharArray(map5(lookupBaseDigit(base))(decDigits(base)(maybe(0)(function(x) {
+      return rjust(6)("A")(fromCharArray(map5(lookupBaseDigit(base))(decDigits(base)(maybe(0)(function(x) {
         return x;
       })(fromString(dec))))));
     };

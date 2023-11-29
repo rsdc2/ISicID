@@ -1,9 +1,14 @@
-module DecToBase where
+module DecToBase
+  ( decDigits
+  , decToBase
+  , getBaseAsInt
+  )
+  where
 
 import Prelude
 
-import Data.Int as Int
 import Data.Maybe (Maybe(..), maybe)
+import Data.Int as Int
 import Data.String.CodeUnits (fromCharArray)
 import Types (Base(..))
 import Utils (getItem, getBaseDigits)
@@ -16,7 +21,7 @@ getBaseAsInt _ = 10
 
 lookupBaseDigit :: Base -> Int -> Char
 lookupBaseDigit b i = case getItem i (getBaseDigits b) of
-    Nothing -> '-'
+    Nothing -> '?'
     Just x -> x 
 
 decDigits :: Base -> Int -> Array Int
@@ -30,5 +35,5 @@ decDigits base dec =
           r = dec `mod` b
 
 decToBase :: Base -> String -> String
-decToBase base dec = rjust 5 'A' $ fromCharArray $ lookupBaseDigit base <$> (decDigits base $ maybe 0 (\x -> x) (Int.fromString dec))
+decToBase base dec = rjust 6 'A' $ fromCharArray $ lookupBaseDigit base <$> (decDigits base $ maybe 0 (\x -> x) (Int.fromString dec))
 

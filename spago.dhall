@@ -15,15 +15,15 @@ to generate this file without the comments in this block.
   [ "arrays"
   , "console"
   , "effect"
+  , "either"
+  , "exceptions"
+  , "integers"
   , "maybe"
   , "prelude"
   , "strings"
-  , "integers"
-  , "either"
-  , "exceptions"
   , "web-dom"
-  , "web-html"
   , "web-events"
+  , "web-html"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

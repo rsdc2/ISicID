@@ -15,7 +15,7 @@ import Data.Array (take, drop)
 import Data.Either (Either(..))
 import Data.Int as Int
 import Data.Maybe (Maybe(..))
-import Data.String (length)
+import Data.String (length, replace, Pattern(..), Replacement(..))
 import Data.String.CodeUnits (fromCharArray, toCharArray)
 import Data.String.Regex (Regex, parseFlags, regex, test)
 import Errors as Err
@@ -30,13 +30,12 @@ rjust i c s =
 
 format :: String -> String
 format s = 
-    let cs = toCharArray $ rjust 10 '0' s
-    in "ISic" <> (fromCharArray $ take 6 cs <> ['-'] <> drop 6 cs)
+    let cs = toCharArray $ rjust 11 '0' s
+    in "ISic" <> (fromCharArray (take 6 cs <> ['-'] <> drop 6 cs))
 
 removeFormatting :: String -> String
-removeFormatting s = 
-    let cs = toCharArray s
-    in fromCharArray $ (take 6 $ drop 4 $ cs) <> (drop 11 cs) 
+removeFormatting = 
+    replace (Pattern "ISic") (Replacement "") <<< replace (Pattern "-") (Replacement"")
 
 createRegex :: String -> Either String Regex
 createRegex s = case regex s (parseFlags "g") of
@@ -44,7 +43,7 @@ createRegex s = case regex s (parseFlags "g") of
     Right reg -> Right reg
 
 checkValidISicTokenID :: String -> Either String Boolean
-checkValidISicTokenID s = case createRegex "^ISic[0-9]{6}-[0-9]{4}$" of
+checkValidISicTokenID s = case createRegex "^ISic[0-9]{6}-[0-9]{5}$" of
     Left err -> Left err
     Right reg -> Right (test reg s)
 
@@ -53,19 +52,20 @@ isicToInt = Int.fromString <<< removeFormatting
 
 checkDecBelowMax :: String -> Either String Boolean
 checkDecBelowMax s = case isicToInt s of 
-    Nothing -> Left "Could not convert to integer"
-    Just i
-        | i <= 380204031 -> Right true
-        | otherwise -> Right false
+    Nothing -> Left $ "Could not convert to integer: " <> removeFormatting s 
+    Just i -> Right true
+        -- | i <= 380204031 -> Right true
+        -- | otherwise -> Right false
+        -- | otherwise -> Right true
 
 checkBase52ValidLength :: String -> Either String Boolean
 checkBase52ValidLength s 
-    | length s == 5 = Right true
-    | length s < 5 = Left Err.base52TooShortErr
-    | length s > 5 = Left Err.base52TooLongErr
+    | length s == 6 = Right true
+    | length s < 6 = Left Err.base52TooShortErr
+    | length s > 6 = Left Err.base52TooLongErr
     | otherwise = Left "Error"
 
 checkValidCompressedForm :: String -> Either String Boolean
-checkValidCompressedForm s = case createRegex "^[a-zA-Z]{5}$" of
+checkValidCompressedForm s = case createRegex "^[a-zA-Z]{6}$" of
     Left err -> Left err
     Right reg -> Right (test reg s)

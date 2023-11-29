@@ -50,7 +50,7 @@ charToStr c = fromCharArray [c]
 upper :: Char -> Char
 upper c = case head $ toCharArray $ toUpper $ charToStr c of
     Just x -> x
-    Nothing -> '-'
+    Nothing -> '?'
 
 getBaseDigits :: Base -> Array Char
 getBaseDigits Hex = hexDigits
