@@ -958,6 +958,13 @@
   };
 
   // output/Data.String.Common/foreign.js
+  var replace = function(s1) {
+    return function(s2) {
+      return function(s3) {
+        return s3.replace(s1, s2);
+      };
+    };
+  };
   var toUpper = function(s) {
     return s.toUpperCase();
   };
@@ -977,6 +984,20 @@
     Base522.value = new Base522();
     return Base522;
   }();
+  var Dec = /* @__PURE__ */ function() {
+    function Dec2() {
+    }
+    ;
+    Dec2.value = new Dec2();
+    return Dec2;
+  }();
+  var Base87 = /* @__PURE__ */ function() {
+    function Base872() {
+    }
+    ;
+    Base872.value = new Base872();
+    return Base872;
+  }();
 
   // output/Utils/index.js
   var add2 = /* @__PURE__ */ add(semiringInt);
@@ -984,6 +1005,8 @@
   var sum2 = function(xs) {
     return foldr2(add2)(0)(xs);
   };
+  var greekUpper = ["\u0393", "\u0394", "\u0398", "\u039B", "\u039E", "\u03A0", "\u03A3", "\u03A6", "\u03A8", "\u03A9"];
+  var greekLower = ["\u03B2", "\u03B4", "\u03B6", "\u03B7", "\u03B8", "\u03BB", "\u03BC", "\u03BD", "\u03BE", "\u03C0", "\u03C3", "\u03C4", "\u03C6", "\u03C7", "\u03C8"];
   var getItem = function(i) {
     return function(xs) {
       return index(xs)(i);
@@ -1005,7 +1028,7 @@
       return "-";
     }
     ;
-    throw new Error("Failed pattern match at Utils (line 51, column 11 - line 53, column 19): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Utils (line 60, column 11 - line 62, column 19): " + [v.constructor.name]);
   };
   var digitsUcase = /* @__PURE__ */ map(functorArray)(upper)(digitsLcase);
   var baseAsDec = function(v) {
@@ -1017,10 +1040,19 @@
       return 52;
     }
     ;
-    return 10;
+    if (v instanceof Base87) {
+      return 87;
+    }
+    ;
+    if (v instanceof Dec) {
+      return 10;
+    }
+    ;
+    throw new Error("Failed pattern match at Utils (line 70, column 1 - line 70, column 25): " + [v.constructor.name]);
   };
+  var base87Digits = /* @__PURE__ */ append2(digits0to9)(/* @__PURE__ */ append2(digitsUcase)(/* @__PURE__ */ append2(digitsLcase)(/* @__PURE__ */ append2(greekUpper)(greekLower))));
   var base52Digits = /* @__PURE__ */ append2(digitsUcase)(digitsLcase);
-  var getBaseDigits = function(v) {
+  var baseDigits = function(v) {
     if (v instanceof Hex) {
       return hexDigits;
     }
@@ -1029,13 +1061,21 @@
       return base52Digits;
     }
     ;
-    return digits0to9;
+    if (v instanceof Base87) {
+      return base87Digits;
+    }
+    ;
+    if (v instanceof Dec) {
+      return digits0to9;
+    }
+    ;
+    throw new Error("Failed pattern match at Utils (line 64, column 1 - line 64, column 33): " + [v.constructor.name]);
   };
 
   // output/BaseToDec/index.js
   var append3 = /* @__PURE__ */ append(semigroupArray);
   var map3 = /* @__PURE__ */ map(functorArray);
-  var powerUp = function(base) {
+  var powerUp = function(base2) {
     return function(as) {
       var v = uncons(as);
       if (v instanceof Just && v.value0.tail.length === 0) {
@@ -1043,21 +1083,21 @@
       }
       ;
       if (v instanceof Just) {
-        return append3([v.value0.head * pow(baseAsDec(base))(length(v.value0.tail)) | 0])(powerUp(base)(v.value0.tail));
+        return append3([v.value0.head * pow(baseAsDec(base2))(length(v.value0.tail)) | 0])(powerUp(base2)(v.value0.tail));
       }
       ;
       if (v instanceof Nothing) {
         return [0];
       }
       ;
-      throw new Error("Failed pattern match at BaseToDec (line 16, column 19 - line 19, column 19): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at BaseToDec (line 15, column 19 - line 18, column 19): " + [v.constructor.name]);
     };
   };
-  var getDecDigitOfBase = function(base) {
+  var getDecDigitOfBase = function(base2) {
     return function(x) {
       var v = findIndex(function(y) {
         return y === x;
-      })(getBaseDigits(base));
+      })(baseDigits(base2));
       if (v instanceof Nothing) {
         return 0;
       }
@@ -1066,17 +1106,17 @@
         return v.value0;
       }
       ;
-      throw new Error("Failed pattern match at BaseToDec (line 22, column 28 - line 24, column 16): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at BaseToDec (line 21, column 28 - line 23, column 16): " + [v.constructor.name]);
     };
   };
-  var getDecDigitsOfBase = function(base) {
+  var getDecDigitsOfBase = function(base2) {
     return function(chars) {
-      return map3(getDecDigitOfBase(base))(chars);
+      return map3(getDecDigitOfBase(base2))(chars);
     };
   };
-  var baseToDec = function(base) {
+  var baseToDec = function(base2) {
     return function(s) {
-      return sum2(powerUp(base)(getDecDigitsOfBase(base)(toCharArray(s))));
+      return sum2(powerUp(base2)(getDecDigitsOfBase(base2)(toCharArray(s))));
     };
   };
 
@@ -1354,15 +1394,18 @@
       };
     };
   };
-  var removeFormatting = function(s) {
-    var cs = toCharArray(s);
-    return fromCharArray(append1(take(6)(drop(4)(cs)))(drop(11)(cs)));
-  };
-  var isicToInt = function($25) {
-    return fromString(removeFormatting($25));
+  var removeFormatting = /* @__PURE__ */ function() {
+    var $25 = replace("ISic")("");
+    var $26 = replace("-")("");
+    return function($27) {
+      return $25($26($27));
+    };
+  }();
+  var isicToInt = function($28) {
+    return fromString(removeFormatting($28));
   };
   var format = function(s) {
-    var cs = toCharArray(rjust(10)("0")(s));
+    var cs = toCharArray(rjust(11)("0")(s));
     return "ISic" + fromCharArray(append1(take(6)(cs))(append1(["-"])(drop(6)(cs))));
   };
   var createRegex = function(s) {
@@ -1375,10 +1418,10 @@
       return new Right(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 42, column 17 - line 44, column 27): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 41, column 17 - line 43, column 27): " + [v.constructor.name]);
   };
   var checkValidISicTokenID = function(s) {
-    var v = createRegex("^ISic[0-9]{6}-[0-9]{4}$");
+    var v = createRegex("^ISic[0-9]{6}-[0-9]{5}$");
     if (v instanceof Left) {
       return new Left(v.value0);
     }
@@ -1387,10 +1430,10 @@
       return new Right(test(v.value0)(s));
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 47, column 27 - line 49, column 36): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 46, column 27 - line 48, column 36): " + [v.constructor.name]);
   };
   var checkValidCompressedForm = function(s) {
-    var v = createRegex("^[a-zA-Z]{5}$");
+    var v = createRegex("^[a-zA-Z0-9\u0393\u0394\u0398\u039B\u039E\u03A0\u03A3\u03A6\u03A8\u03A9\u03B2\u03B4\u03B6\u03B7\u03B8\u03BB\u03BC\u03BD\u03BE\u03C0\u03C3\u03C4\u03C6\u03C7\u03C8]{5}$");
     if (v instanceof Left) {
       return new Left(v.value0);
     }
@@ -1408,7 +1451,7 @@
     }
     ;
     if (v instanceof Just) {
-      if (v.value0 <= 380204031) {
+      if (v.value0 <= 2147483647) {
         return new Right(true);
       }
       ;
@@ -1418,9 +1461,9 @@
       ;
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 55, column 22 - line 59, column 35): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 54, column 22 - line 59, column 35): " + [v.constructor.name]);
   };
-  var checkBase52ValidLength = function(s) {
+  var checkBaseFormValidLength = function(s) {
     if (length3(s) === 5) {
       return new Right(true);
     }
@@ -1437,7 +1480,7 @@
       return new Left("Error");
     }
     ;
-    throw new Error("Failed pattern match at StringFormat (line 61, column 1 - line 61, column 58): " + [s.constructor.name]);
+    throw new Error("Failed pattern match at StringFormat (line 61, column 1 - line 61, column 60): " + [s.constructor.name]);
   };
 
   // output/DecToBase/index.js
@@ -1447,17 +1490,20 @@
   var map5 = /* @__PURE__ */ map(functorArray);
   var lookupBaseDigit = function(b) {
     return function(i) {
-      var v = getItem(i)(getBaseDigits(b));
+      var v = getItem(i)(baseDigits(b));
       if (v instanceof Nothing) {
-        return "-";
+        return "?";
       }
       ;
       if (v instanceof Just) {
         return v.value0;
       }
       ;
-      throw new Error("Failed pattern match at DecToBase (line 18, column 23 - line 20, column 16): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at DecToBase (line 24, column 23 - line 26, column 16): " + [v.constructor.name]);
     };
+  };
+  var zeroDigit = function(base2) {
+    return lookupBaseDigit(base2)(0);
   };
   var getBaseAsInt = function(v) {
     if (v instanceof Hex) {
@@ -1468,11 +1514,15 @@
       return 52;
     }
     ;
+    if (v instanceof Base87) {
+      return 87;
+    }
+    ;
     return 10;
   };
-  var decDigits = function(base) {
+  var decDigits = function(base2) {
     return function(dec) {
-      var b = getBaseAsInt(base);
+      var b = getBaseAsInt(base2);
       var q = div2(dec)(b);
       var r = mod2(dec)(b);
       var $11 = q === 0;
@@ -1485,12 +1535,12 @@
         return [q, r];
       }
       ;
-      return append4(decDigits(base)(q))([r]);
+      return append4(decDigits(base2)(q))([r]);
     };
   };
-  var decToBase = function(base) {
+  var decToBase = function(base2) {
     return function(dec) {
-      return rjust(5)("A")(fromCharArray(map5(lookupBaseDigit(base))(decDigits(base)(maybe(0)(function(x) {
+      return rjust(5)(zeroDigit(base2))(fromCharArray(map5(lookupBaseDigit(base2))(decDigits(base2)(maybe(0)(function(x) {
         return x;
       })(fromString(dec))))));
     };
@@ -1725,7 +1775,7 @@
       return value3(elem2.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 109, column 6 - line 111, column 63): " + [elem2.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 118, column 6 - line 120, column 63): " + [elem2.constructor.name]);
   };
   var doc = function __do() {
     var d = windowDoc();
@@ -1747,7 +1797,7 @@
         return elem2.value0;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 55, column 3 - line 57, column 21): " + [elem2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 64, column 3 - line 66, column 21): " + [elem2.constructor.name]);
     };
   };
   var showValue$prime = function(f) {
@@ -1785,53 +1835,17 @@
       return pure2(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at Main (line 129, column 26 - line 131, column 23): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 138, column 26 - line 140, column 23): " + [v.constructor.name]);
   };
-  var convertToISic = /* @__PURE__ */ function() {
-    var $47 = show(showInt);
-    var $48 = baseToDec(Base52.value);
-    return function($49) {
-      return format($47($48($49)));
-    };
+  var compressButton = /* @__PURE__ */ getElem("compress-btn");
+  var click2 = "click";
+  var base = /* @__PURE__ */ function() {
+    return Base87.value;
   }();
-  var decompressID = function(s) {
-    var v = checkValidISicTokenID(s);
-    if (v instanceof Right && v.value0) {
-      return alreadyDecompressedErr;
-    }
-    ;
-    var v1 = checkBase52ValidLength(s);
-    if (v1 instanceof Left) {
-      return v1.value0;
-    }
-    ;
-    if (v1 instanceof Right && v1.value0) {
-      var v2 = checkValidCompressedForm(s);
-      if (v2 instanceof Left) {
-        return v2.value0;
-      }
-      ;
-      if (v2 instanceof Right && v2.value0) {
-        return convertToISic(s);
-      }
-      ;
-      if (v2 instanceof Right && !v2.value0) {
-        return invalidISicIDErr;
-      }
-      ;
-      throw new Error("Failed pattern match at Main (line 83, column 19 - line 86, column 42): " + [v2.constructor.name]);
-    }
-    ;
-    if (v1 instanceof Right && !v1.value0) {
-      return "Error";
-    }
-    ;
-    throw new Error("Failed pattern match at Main (line 81, column 8 - line 87, column 27): " + [v1.constructor.name]);
-  };
-  var convertToBase52 = /* @__PURE__ */ function() {
-    var $50 = decToBase(Base52.value);
-    return function($51) {
-      return $50(removeFormatting($51));
+  var convertToBase = /* @__PURE__ */ function() {
+    var $47 = decToBase(base);
+    return function($48) {
+      return $47(removeFormatting($48));
     };
   }();
   var compressID = function(s) {
@@ -1852,24 +1866,63 @@
       }
       ;
       if (v2 instanceof Right && v2.value0) {
-        return convertToBase52(s);
+        return convertToBase(s);
       }
       ;
       if (v2 instanceof Right && !v2.value0) {
         return iSicTooLargeErr;
       }
       ;
-      throw new Error("Failed pattern match at Main (line 94, column 19 - line 97, column 41): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 103, column 19 - line 106, column 41): " + [v2.constructor.name]);
     }
     ;
     if (v1 instanceof Right && !v1.value0) {
       return invalidISicIDFormatErr;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 92, column 8 - line 98, column 46): " + [v1.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 101, column 8 - line 107, column 46): " + [v1.constructor.name]);
   };
-  var compressButton = /* @__PURE__ */ getElem("compress-btn");
-  var click2 = "click";
+  var convertToISic = /* @__PURE__ */ function() {
+    var $49 = show(showInt);
+    var $50 = baseToDec(base);
+    return function($51) {
+      return format($49($50($51)));
+    };
+  }();
+  var decompressID = function(s) {
+    var v = checkValidISicTokenID(s);
+    if (v instanceof Right && v.value0) {
+      return alreadyDecompressedErr;
+    }
+    ;
+    var v1 = checkBaseFormValidLength(s);
+    if (v1 instanceof Left) {
+      return v1.value0;
+    }
+    ;
+    if (v1 instanceof Right && v1.value0) {
+      var v2 = checkValidCompressedForm(s);
+      if (v2 instanceof Left) {
+        return v2.value0;
+      }
+      ;
+      if (v2 instanceof Right && v2.value0) {
+        return convertToISic(s);
+      }
+      ;
+      if (v2 instanceof Right && !v2.value0) {
+        return invalidISicIDErr;
+      }
+      ;
+      throw new Error("Failed pattern match at Main (line 92, column 19 - line 95, column 42): " + [v2.constructor.name]);
+    }
+    ;
+    if (v1 instanceof Right && !v1.value0) {
+      return "Error";
+    }
+    ;
+    throw new Error("Failed pattern match at Main (line 90, column 8 - line 96, column 27): " + [v1.constructor.name]);
+  };
   var main = function __do3() {
     var inputVal = textInput();
     var compressListener = eventListener(showValueEvent(compressID)(inputVal))();

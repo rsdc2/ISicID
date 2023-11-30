@@ -5,7 +5,7 @@ module Utils
   , digits0to9
   , digitsLcase
   , digitsUcase
-  , getBaseDigits
+  , baseDigits
   , getItem
   , hexDigits
   , sum
@@ -35,8 +35,17 @@ digitsUcase = upper <$> digitsLcase
 hexDigits ∷ Array Char
 hexDigits = digits0to9 <> ['A', 'B', 'C', 'D', 'E', 'F']
 
+greekLower :: Array Char
+greekLower = ['β', 'δ', 'ζ', 'η', 'θ', 'λ', 'μ', 'ν', 'ξ', 'π', 'σ', 'τ', 'φ', 'χ', 'ψ']
+
+greekUpper :: Array Char
+greekUpper = ['Γ', 'Δ', 'Θ', 'Λ', 'Ξ', 'Π', 'Σ', 'Φ', 'Ψ', 'Ω']
+
 base52Digits ∷ Array Char
 base52Digits = digitsUcase <> digitsLcase
+
+base87Digits :: Array Char
+base87Digits = digits0to9 <> digitsUcase <> digitsLcase <> greekUpper <> greekLower
 
 sum :: Array Int -> Int
 sum xs = foldr (+) 0 xs
@@ -52,12 +61,14 @@ upper c = case head $ toCharArray $ toUpper $ charToStr c of
     Just x -> x
     Nothing -> '-'
 
-getBaseDigits :: Base -> Array Char
-getBaseDigits Hex = hexDigits
-getBaseDigits Base52 = base52Digits
-getBaseDigits _ = digits0to9
+baseDigits :: Base -> Array Char
+baseDigits Hex = hexDigits
+baseDigits Base52 = base52Digits
+baseDigits Base87 = base87Digits
+baseDigits Dec = digits0to9
 
 baseAsDec :: Base -> Int
 baseAsDec Hex = 16
 baseAsDec Base52 = 52
-baseAsDec _ = 10
+baseAsDec Base87 = 87
+baseAsDec Dec = 10

@@ -1,6 +1,5 @@
 module BaseToDec
-  ( baseToDec
-  )
+  ( baseToDec )
   where
 
 import Prelude
@@ -10,7 +9,7 @@ import Data.Int (pow)
 import Data.Maybe (Maybe(..))
 import Data.String.CodeUnits (toCharArray)
 import Types (Base)
-import Utils (baseAsDec, getBaseDigits, sum)
+import Utils (baseAsDec, baseDigits, sum)
 
 powerUp :: Base -> Array Int -> Array Int
 powerUp base as = case uncons as of
@@ -19,7 +18,7 @@ powerUp base as = case uncons as of
     Nothing -> [0]
 
 getDecDigitOfBase :: Base -> Char -> Int
-getDecDigitOfBase base x = case findIndex (\y -> y == x) (getBaseDigits base) of
+getDecDigitOfBase base x = case findIndex (\y -> y == x) (baseDigits base) of
     Nothing -> 0
     Just z -> z
 
@@ -27,4 +26,7 @@ getDecDigitsOfBase :: Base -> Array Char -> Array Int
 getDecDigitsOfBase base chars = getDecDigitOfBase base <$> chars
 
 baseToDec :: Base -> String -> Int
-baseToDec base s = sum $ powerUp base $ getDecDigitsOfBase base $ toCharArray s 
+baseToDec base s = sum
+                    $ powerUp base
+                    $ getDecDigitsOfBase base
+                    $ toCharArray s 

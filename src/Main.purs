@@ -11,7 +11,13 @@ import Effect (Effect)
 import Effect.Console (log)
 import Effect.Exception (error, throw, throwException)
 import Errors as Err
-import StringFormat (checkBase52ValidLength, checkDecBelowMax, checkValidCompressedForm, checkValidISicTokenID, format, removeFormatting)
+import StringFormat (
+    checkBaseFormValidLength
+  , checkDecBelowMax
+  , checkValidCompressedForm
+  , checkValidISicTokenID
+  , format
+  , removeFormatting)
 import Types (Base(..))
 import Web.DOM (Document, NonElementParentNode)
 import Web.DOM.Document (toNonElementParentNode)
@@ -28,6 +34,9 @@ import Web.HTML.HTMLElement as HTMLElement
 import Web.HTML.HTMLInputElement as HTMLInputElement
 import Web.HTML.Window (document)
 
+
+base :: Base
+base = Base87
 
 click :: EventType
 click = EventType "click"
@@ -78,7 +87,7 @@ showValueEvent f elem _ = do
 decompressID :: String -> String
 decompressID s = case checkValidISicTokenID s of
   Right true -> Err.alreadyDecompressedErr
-  _ -> case checkBase52ValidLength s of
+  _ -> case checkBaseFormValidLength s of
     Left err -> err
     Right true -> case checkValidCompressedForm s of
       Left err -> err
@@ -93,15 +102,15 @@ compressID s = case checkValidCompressedForm s of
     Left err -> err
     Right true -> case checkDecBelowMax s of
       Left err -> err
-      Right true -> convertToBase52 s
+      Right true -> convertToBase s
       Right false -> Err.iSicTooLargeErr
     Right false -> Err.invalidISicIDFormatErr
 
-convertToBase52 :: String -> String
-convertToBase52 = decToBase Base52 <<< removeFormatting
+convertToBase :: String -> String
+convertToBase = decToBase base <<< removeFormatting
 
 convertToISic :: String -> String
-convertToISic = format <<< show <<< baseToDec Base52
+convertToISic = format <<< show <<< baseToDec base
 
 getInputValue :: Element.Element -> Effect String
 getInputValue x = 

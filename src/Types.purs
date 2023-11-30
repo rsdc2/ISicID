@@ -7,3 +7,4 @@ data Base =
       Hex
     | Base52
     | Dec
+    | Base87
