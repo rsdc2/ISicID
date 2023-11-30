@@ -11,6 +11,7 @@ import Data.String.CodeUnits (toCharArray)
 import Types (Base)
 import Utils (baseAsDec, baseDigits, sum)
 
+-- raises to appropriate power based on position with respect to end of sequence
 powerUp :: Base -> Array Int -> Array Int
 powerUp base as = case uncons as of
     Just { head:x, tail:[] } -> [x]
