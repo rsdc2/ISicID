@@ -30,7 +30,7 @@ rjust i c s =
 
 format :: String -> String
 format s = 
-    let cs = toCharArray $ rjust 10 '0' s
+    let cs = toCharArray $ rjust 11 '0' s
     in "ISic" <> (fromCharArray $ take 6 cs <> ['-'] <> drop 6 cs)
 
 removeFormatting :: String -> String
@@ -44,7 +44,7 @@ createRegex s = case regex s (parseFlags "g") of
     Right reg -> Right reg
 
 checkValidISicTokenID :: String -> Either String Boolean
-checkValidISicTokenID s = case createRegex "^ISic[0-9]{6}-[0-9]{4}$" of
+checkValidISicTokenID s = case createRegex "^ISic[0-9]{6}-[0-9]{5}$" of
     Left err -> Left err
     Right reg -> Right (test reg s)
 
