@@ -1090,7 +1090,7 @@
         return [0];
       }
       ;
-      throw new Error("Failed pattern match at BaseToDec (line 15, column 19 - line 18, column 19): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at BaseToDec (line 16, column 19 - line 19, column 19): " + [v.constructor.name]);
     };
   };
   var getDecDigitOfBase = function(base2) {
@@ -1106,7 +1106,7 @@
         return v.value0;
       }
       ;
-      throw new Error("Failed pattern match at BaseToDec (line 21, column 28 - line 23, column 16): " + [v.constructor.name]);
+      throw new Error("Failed pattern match at BaseToDec (line 22, column 28 - line 24, column 16): " + [v.constructor.name]);
     };
   };
   var getDecDigitsOfBase = function(base2) {

@@ -54,8 +54,8 @@ checkDecBelowMax :: String -> Either String Boolean
 checkDecBelowMax s = case isicToInt s of 
     Nothing -> Left "Could not convert to integer"
     Just i
-        -- | i <= 5457149006 -> Right true
-        | i <= 2147483647 -> Right true
+        | i <= 5457149006 -> Right true
+        -- | i <= 2147483647 -> Right true
         | otherwise -> Right false
 
 checkBaseFormValidLength :: String -> Either String Boolean

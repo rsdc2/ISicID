@@ -40,7 +40,7 @@ zeroDigit base = lookupBaseDigit base 0
 
 decToBase :: Base -> String -> String
 decToBase base dec = rjust 5 (zeroDigit base)
-                        $ fromCharArray 
-                        $ lookupBaseDigit base 
+                        $   fromCharArray 
+                        $   lookupBaseDigit base 
                         <$> (decDigits base $ maybe 0 (\x -> x) (Int.fromString dec))
 
