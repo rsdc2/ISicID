@@ -1,4 +1,4 @@
-# Token ID resolver for I.Sicily tokens
+# Token ID resolver for I.Sicily tokens (α)
 
 This is a resolver for token IDs on token elements in the [I.Sicily](https://github.com/ISicily/ISicily) corpus of inscriptions from ancient Sicily.
 
